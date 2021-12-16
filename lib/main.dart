@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rezervujme_app/screens/intro_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
+import 'package:rezervujme_app/screens/settings_screen.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:rezervujme_app/screens/verify_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
                         restaurantId: int.parse(context
                             .vRouter.pathParameters['restaurantId'] as String),
                       ),
-                    )
+                    ),
                   ])
             ],
             nestedRoutes: [
@@ -84,7 +85,13 @@ class MyApp extends StatelessWidget {
                 aliases: const ['restaurants/:restaurantId'],
                 widget: const HomeScreen(),
                 key: const ValueKey('restaurants'),
+                transitionDuration: Duration.zero,
               ),
+              VWidget(
+                transitionDuration: Duration.zero,
+                path: 'settings',
+                widget: const SettingsScreen(),
+              )
             ],
           ),
         ],
@@ -98,14 +105,17 @@ class TabsScaffold extends StatelessWidget {
 
   final Widget child;
 
+  final List<String> _tabs = const ['/tabs/restaurants', '/tabs/settings'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: context.vRouter.url.contains('restaurants') ? 0 : 1,
-        onTap: (value) => context.vRouter
-            .to((value == 0) ? '/tabs/restaurants' : '/tabs/onboarding'),
+        currentIndex: !_tabs.contains(context.vRouter.url)
+            ? 0
+            : _tabs.indexOf(context.vRouter.url),
+        onTap: (index) => context.vRouter.to(_tabs[index]),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(

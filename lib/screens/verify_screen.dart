@@ -53,6 +53,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 16),
                 child: TextField(
+                  autofocus: true,
                   controller: _textEditingController,
                   onSubmitted: (_) => _verifyPin(),
                   keyboardType: TextInputType.number,
