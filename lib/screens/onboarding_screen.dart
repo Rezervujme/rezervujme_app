@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           onPressed: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('onboarded', true);
-            context.vRouter.to('/tabs/restaurants');
+            context.vRouter.to('/intro');
           },
         ),
       ),
