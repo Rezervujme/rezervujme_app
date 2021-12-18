@@ -44,6 +44,7 @@ dependencies:
   vrouter: ^1.2.0+15
   intl_phone_number_input: ^0.7.0+2
   flutter_svg: ^1.0.0
+  pin_code_fields: ^7.3.0
 
 dev_dependencies:
   flutter_test:

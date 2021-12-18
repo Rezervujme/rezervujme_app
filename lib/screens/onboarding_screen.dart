@@ -17,10 +17,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
+      dotsDecorator: DotsDecorator(
+          color: Colors.grey.shade300,
+          activeColor: Theme.of(context).primaryColor),
       globalFooter: SizedBox(
         width: double.infinity,
         height: 64,
         child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Theme.of(context).primaryColor,
+          ),
           child: const Text(
             'Let\'s go right away!',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:vrouter/vrouter.dart';
 
 class VerifyScreen extends StatefulWidget {
@@ -9,20 +12,24 @@ class VerifyScreen extends StatefulWidget {
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
-  late final TextEditingController _textEditingController;
+  final _formKey = GlobalKey<FormState>();
+  final StreamController<ErrorAnimationType> _errorAnimationController =
+      StreamController<ErrorAnimationType>();
 
-  @override
-  void initState() {
-    _textEditingController = TextEditingController()
-      ..addListener(() {
-        setState(() {});
-      });
-    super.initState();
-  }
+  String _currentPin = '';
 
   void _verifyPin() {
-    print(_textEditingController.text);
+    if (!_formKey.currentState!.validate()) {
+      print('error');
+      print(_currentPin);
+
+      _errorAnimationController.add(ErrorAnimationType.shake);
+      return;
+    }
+    print(_currentPin);
     context.vRouter.to('/tabs');
+
+    // context.vRouter.to('/tabs');
   }
 
   @override
@@ -52,12 +59,21 @@ class _VerifyScreenState extends State<VerifyScreen> {
               ),
               Container(
                 margin: const EdgeInsets.only(top: 16),
-                child: TextField(
-                  autofocus: true,
-                  controller: _textEditingController,
-                  onSubmitted: (_) => _verifyPin(),
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(hintText: '0000'),
+                child: Form(
+                  key: _formKey,
+                  child: PinCodeTextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _currentPin = value;
+                      });
+                    },
+                    validator: (pin) => pin?.length == 6 ? null : "",
+                    length: 6,
+                    appContext: context,
+                    autoFocus: true,
+                    keyboardType: TextInputType.number,
+                    errorAnimationController: _errorAnimationController,
+                  ),
                 ),
               ),
               Container(
@@ -68,9 +84,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                       ),
-                      onPressed: _textEditingController.text.isEmpty
-                          ? null
-                          : _verifyPin,
+                      onPressed: _verifyPin,
                       child: const Text(
                         'Potvrdiť',
                         style: TextStyle(fontSize: 16),
