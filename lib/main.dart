@@ -8,7 +8,7 @@ import 'package:rezervujme_app/screens/verify_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vrouter/vrouter.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/restaurants_screen.dart';
 import 'screens/restaurant_detail_screen.dart';
 
 void main() {
@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
               VWidget(
                 path: 'restaurants',
                 aliases: const ['restaurants/:restaurantId'],
-                widget: const HomeScreen(),
+                widget: const RestaurantsScreen(),
                 key: const ValueKey('restaurants'),
                 transitionDuration: Duration.zero,
               ),
@@ -117,9 +117,10 @@ class TabsScaffold extends StatelessWidget {
             : _tabs.indexOf(context.vRouter.url),
         onTap: (index) => context.vRouter.to(_tabs[index]),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.restaurant), label: 'Reštaurácie'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Nastavenia'),
         ],
       ),
     );

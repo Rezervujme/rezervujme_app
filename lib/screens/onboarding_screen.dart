@@ -13,6 +13,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageDecoration _pageDecoration =
       const PageDecoration(bodyAlignment: Alignment.center);
+
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(

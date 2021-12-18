@@ -10,19 +10,19 @@ class RestaurantsCubit extends Cubit<List<Restaurant>> {
         Restaurant(
             id: 1,
             name: 'Primo Amore',
-            address: 'Kollarko',
+            address: 'Námestie 1. mája 18',
             image:
                 'https://i.picsum.photos/id/237/1200/630.jpg?hmac=NV7OupHtLSM1agzr2beogbePuaTRXq3i7W1Es-TZfbw'),
         Restaurant(
             id: 2,
-            name: 'U Deda',
-            address: 'Ruzinov',
+            name: 'Hostinec u Deda',
+            address: 'Zálužická 49',
             image:
                 'https://i.picsum.photos/id/236/1200/630.jpg?hmac=0iz9185-Q8RfpevWe0izctxPBnDpmKPwlauCOBMism4'),
         Restaurant(
             id: 3,
-            name: 'Basilico',
-            address: 'Kapucinska',
+            name: 'Basilicò',
+            address: 'Dunajská 25',
             image:
                 'https://i.picsum.photos/id/235/1200/630.jpg?hmac=s5VslXcq5gBQjo6WCZBcOC36bFCASPWmtbaKhVkgkAY')
       ]..shuffle();

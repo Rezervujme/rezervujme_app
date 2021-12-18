@@ -42,7 +42,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             CachedNetworkImage(
                 fit: BoxFit.fitWidth,
                 placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
+                    const CircularProgressIndicator.adaptive(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 imageUrl: _restaurant.image),
             AspectRatio(
