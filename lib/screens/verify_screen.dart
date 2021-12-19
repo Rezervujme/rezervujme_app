@@ -19,7 +19,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   String _currentPin = '';
 
   void _verifyPin() {
-    if (!_formKey.currentState!.validate()) {
+    if (!(_formKey.currentState?.validate() ?? false)) {
       print('error');
       print(_currentPin);
 
@@ -84,7 +84,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                       ),
-                      onPressed: _verifyPin,
+                      onPressed: _currentPin.length == 6 ? _verifyPin : null,
                       child: const Text(
                         'Potvrdiť',
                         style: TextStyle(fontSize: 16),

@@ -35,9 +35,7 @@ class IntroScreen extends StatelessWidget {
               ),
               const Text(
                 'Prosím zadajte vaše telefónne číslo.',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontSize: 16),
               ),
               const Expanded(child: LoginForm()),
             ],
@@ -79,7 +77,7 @@ class _LoginFormState extends State<LoginForm> {
             spaceBetweenSelectorAndTextField: 8,
             initialValue: PhoneNumber(isoCode: 'SK'),
             inputDecoration: InputDecoration(
-                hintText: '901 123 456',
+                hintText: 'Telefónne číslo',
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                         color: Theme.of(context).primaryColor, width: 1.5))),
@@ -111,9 +109,9 @@ class _LoginFormState extends State<LoginForm> {
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
                   ),
-                  onPressed: _phoneNumber.dialCode == _phoneNumber.phoneNumber
-                      ? null
-                      : submitNumber),
+                  onPressed: _formKey.currentState?.validate() ?? false
+                      ? submitNumber
+                      : null),
             )),
       ),
     ]);
