@@ -69,7 +69,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     _editingController.addListener(() {
-      if (_editingController.text.startsWith('+')) {
+      if (_editingController.text.startsWith('+') &&
+          _editingController.text.length > 1) {
         _editingController.text = _editingController.text
             .substring(_editingController.text.indexOf(' ') + 1);
       }
