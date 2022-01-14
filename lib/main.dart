@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rezervujme_app/screens/intro_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
+import 'package:rezervujme_app/screens/register_screen.dart';
 import 'package:rezervujme_app/screens/settings_screen.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:rezervujme_app/screens/verify_screen.dart';
@@ -49,7 +50,8 @@ class MyApp extends StatelessWidget {
                 VWidget(path: '/onboarding', widget: const OnboardingScreen())
               ]),
           VWidget(path: '/intro', widget: const IntroScreen(), stackedRoutes: [
-            VWidget(path: 'verify', widget: const VerifyScreen())
+            VWidget(path: 'verify', widget: const VerifyScreen()),
+            VWidget(path: 'register', widget: const RegisterScreen())
           ]),
 
           //TABS

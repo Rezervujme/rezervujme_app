@@ -58,11 +58,23 @@ class _LoginFormState extends State<LoginForm> {
 
   PhoneNumber _phoneNumber = PhoneNumber();
 
+  final TextEditingController _editingController = TextEditingController();
   void submitNumber() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     print(_phoneNumber.phoneNumber);
     context.vRouter.to('/intro/verify');
+  }
+
+  @override
+  void initState() {
+    _editingController.addListener(() {
+      if (_editingController.text.startsWith('+')) {
+        _editingController.text = _editingController.text
+            .substring(_editingController.text.indexOf(' ') + 1);
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -73,6 +85,10 @@ class _LoginFormState extends State<LoginForm> {
         child: Container(
           margin: const EdgeInsets.only(right: 16, top: 16),
           child: InternationalPhoneNumberInput(
+            textFieldController: _editingController,
+            keyboardType: TextInputType.phone,
+            maxLength: 16,
+            autofillHints: const [AutofillHints.telephoneNumber],
             cursorColor: Theme.of(context).primaryColor,
             spaceBetweenSelectorAndTextField: 8,
             initialValue: PhoneNumber(isoCode: 'SK'),
@@ -82,9 +98,7 @@ class _LoginFormState extends State<LoginForm> {
                     borderSide: BorderSide(
                         color: Theme.of(context).primaryColor, width: 1.5))),
             onInputChanged: (number) {
-              setState(() {
-                _phoneNumber = number;
-              });
+              setState(() => _phoneNumber = number);
             },
             onSubmit: submitNumber,
             errorMessage: 'Nesprávny formát telefónneho čísla',

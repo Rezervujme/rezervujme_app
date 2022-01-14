@@ -27,7 +27,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       return;
     }
     print(_currentPin);
-    context.vRouter.to('/tabs');
+    context.vRouter.to('/intro/register');
 
     // context.vRouter.to('/tabs');
   }
@@ -62,6 +62,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 child: Form(
                   key: _formKey,
                   child: PinCodeTextField(
+                    enablePinAutofill: true,
                     onChanged: (value) {
                       setState(() {
                         _currentPin = value;
@@ -77,18 +78,20 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ),
               ),
               Container(
-                  margin: const EdgeInsets.only(top: 32),
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                      ),
-                      onPressed: _currentPin.length == 6 ? _verifyPin : null,
-                      child: const Text(
-                        'Potvrdiť',
-                        style: TextStyle(fontSize: 16),
-                      )))
+                margin: const EdgeInsets.only(top: 32),
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: _currentPin.length == 6 ? _verifyPin : null,
+                  child: const Text(
+                    'Potvrdiť',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
