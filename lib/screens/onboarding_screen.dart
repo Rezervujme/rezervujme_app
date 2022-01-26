@@ -22,20 +22,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           activeColor: Theme.of(context).primaryColor),
       globalFooter: SizedBox(
         width: double.infinity,
-        height: 64,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Theme.of(context).primaryColor,
-          ),
-          child: const Text(
-            'Let\'s go right away!',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          onPressed: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool('onboarded', true);
-            context.vRouter.to('/intro');
-          },
+        // height: 64,
+        child: Column(
+          children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+              ),
+              child: const Text(
+                'SKIP DEBUG',
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () async {
+                // SharedPreferences prefs = await SharedPreferences.getInstance();
+                // prefs.setBool('onboarded', true);
+                context.vRouter.to('/tabs');
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+              ),
+              child: const Text(
+                'Let\'s go right away!',
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool('onboarded', true);
+                context.vRouter.to('/intro');
+              },
+            ),
+          ],
         ),
       ),
       pages: [

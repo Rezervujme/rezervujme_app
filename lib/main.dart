@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rezervujme_app/screens/intro_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
+import 'package:rezervujme_app/screens/order_screen.dart';
 import 'package:rezervujme_app/screens/register_screen.dart';
 import 'package:rezervujme_app/screens/settings_screen.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
@@ -28,8 +30,10 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: VRouter(
+        debugShowCheckedModeBanner: false,
         initialUrl: '/onboarding',
         theme: ThemeData(
+            scaffoldBackgroundColor: const Color(0xFFF2F2F2),
             primaryColor: const Color(0xFFDC2625),
             appBarTheme: const AppBarTheme(backgroundColor: Color(0xFFDC2625)),
             textTheme: const TextTheme(
@@ -37,6 +41,12 @@ class MyApp extends StatelessWidget {
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.black))),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('sk')],
         routes: [
           VRouteRedirector(path: '/tabs', redirectTo: '/tabs/restaurants'),
           // ONBOARDING
@@ -73,18 +83,31 @@ class MyApp extends StatelessWidget {
                   },
                   stackedRoutes: [
                     VWidget.builder(
-                      path: 'restaurants/:restaurantId',
-                      builder: (context, state) => RestaurantDetailScreen(
-                        restaurantId: int.parse(context
-                            .vRouter.pathParameters['restaurantId'] as String),
-                      ),
-                    ),
+                        path: 'restaurants/:restaurantId',
+                        builder: (context, state) => RestaurantDetailScreen(
+                              restaurantId: int.parse(context.vRouter
+                                  .pathParameters['restaurantId'] as String),
+                            ),
+                        stackedRoutes: [
+                          VWidget.builder(
+                            path: 'order/:reservationDate',
+                            builder: (context, state) => OrderScreen(
+                              restaurantId: int.parse(context.vRouter
+                                  .pathParameters['restaurantId'] as String),
+                              reservationDateString: context.vRouter
+                                  .pathParameters['reservationDate'] as String,
+                            ),
+                          )
+                        ]),
                   ])
             ],
             nestedRoutes: [
               VWidget(
                 path: 'restaurants',
-                aliases: const ['restaurants/:restaurantId'],
+                aliases: const [
+                  'restaurants/:restaurantId',
+                  'restaurants/:restaurantId/order/:date'
+                ],
                 widget: const RestaurantsScreen(),
                 key: const ValueKey('restaurants'),
                 transitionDuration: Duration.zero,
