@@ -44,208 +44,145 @@ class _OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //     appBar: AppBar(
-    //       title: Text(_restaurant.name),
-    //     ),
-    //     body: Column(
-    //       children: [
-    //         CachedNetworkImage(
-    //             fit: BoxFit.fitWidth,
-    //             placeholder: (context, url) =>
-    //                 const CircularProgressIndicator.adaptive(),
-    //             errorWidget: (context, url, error) => const Icon(Icons.error),
-    //             imageUrl: _restaurant.image),
-    //         AspectRatio(
-    //           aspectRatio: 1,
-    //           child: Container(
-    //             decoration: BoxDecoration(border: Border.all()),
-    //             width: double.infinity,
-    //             child: InteractiveViewer(
-    //               minScale: 0.1,
-    //               maxScale: 4,
-    //               transformationController: _controller,
-    //               constrained: false,
-    //               child: SizedBox(
-    //                 width: 768,
-    //                 height: 768,
-    //                 child: Stack(
-    //                   children: [
-    //                     Positioned(
-    //                       top: 32,
-    //                       left: 32,
-    //                       child: Container(
-    //                         height: 32,
-    //                         width: 32,
-    //                         color: Colors.red,
-    //                       ),
-    //                     ),
-    //                     Positioned(
-    //                       top: 96,
-    //                       left: 736,
-    //                       child: Container(
-    //                         height: 32,
-    //                         width: 32,
-    //                         color: Colors.red,
-    //                       ),
-    //                     ),
-    //                     Positioned(
-    //                       top: 128,
-    //                       left: 704,
-    //                       child: Container(
-    //                         height: 32,
-    //                         width: 32,
-    //                         color: Colors.red,
-    //                       ),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //           ),
-    //         )
-    //       ],
-    //     ));
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          foregroundColor: Theme.of(context).primaryColor,
+          title: Column(
+            children: [
+              Text(
+                'Objednávka',
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
+              Text(
+                '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
+                style: Theme.of(context).textTheme.caption,
+              )
+            ],
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
               children: [
-                IconButton(
-                  onPressed: () => context.vRouter.pop(),
-                  icon: Icon(Icons.chevron_left),
-                  color: Theme.of(context).primaryColor,
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(right: 48),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Výber stola',
-                          style: Theme.of(context).textTheme.subtitle2,
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                      border: Border.all(color: Colors.grey)),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: InteractiveViewer(
+                      minScale: 0.1,
+                      maxScale: 4,
+                      transformationController: _controller,
+                      constrained: false,
+                      child: SizedBox(
+                        width: 768,
+                        height: 768,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 32,
+                              left: 32,
+                              child: OrderTable(
+                                tableState: TableState.available,
+                                tableType: TableType.square,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
-                          style: Theme.of(context).textTheme.caption,
-                        )
-                      ],
+                      ),
                     ),
                   ),
+                ),
+                Container(
+                  child: Text(
+                    'Detaily objednávky',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      OrderItem(
+                          label: _restaurant.name, icon: Icons.house_outlined),
+                      OrderItem(
+                          label: 'Stôl pre 4 osoby',
+                          icon: Icons.table_chart_outlined),
+                      OrderItem(
+                          label: 'Jakub Jelínek', icon: Icons.person_outlined),
+                      OrderItem(
+                        label:
+                            '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
+                        icon: Icons.calendar_today_outlined,
+                      ),
+                      OrderItem(
+                        label: _reservationTime?.format(context) ??
+                            'Vyberte čas rezervácie',
+                        icon: Icons.access_time_outlined,
+                        openTime: true,
+                        callback: () async {
+                          var time = await showTimePicker(
+                              context: context, initialTime: TimeOfDay.now());
+                          if (time != null) {
+                            setState(() {
+                              _reservationTime = time;
+                            });
+                          }
+                        },
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Poznámka',
+                            ),
+                            TextField(
+                              minLines: 2,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              style: TextStyle(fontSize: 13),
+                              cursorColor: Theme.of(context).primaryColor,
+                              decoration: InputDecoration(
+                                  hintText: 'Nepovinné',
+                                  hintStyle: TextStyle(fontSize: 13),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 1.5))),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  height: 48,
+                  margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: _reservationTime == null
+                          ? null
+                          : () => context.vRouter.to('/order-success'),
+                      child: Text('Záväzne objednať')),
                 ),
               ],
             ),
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8),
-                  ),
-                  border: Border.all(color: Colors.grey)),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: InteractiveViewer(
-                  minScale: 0.1,
-                  maxScale: 4,
-                  transformationController: _controller,
-                  constrained: false,
-                  child: SizedBox(
-                    width: 768,
-                    height: 768,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 32,
-                          left: 32,
-                          child: Container(
-                            height: 32,
-                            width: 32,
-                            color: Colors.red,
-                          ),
-                        ),
-                        Positioned(
-                          top: 96,
-                          left: 736,
-                          child: Container(
-                            height: 32,
-                            width: 32,
-                            color: Colors.red,
-                          ),
-                        ),
-                        Positioned(
-                          top: 128,
-                          left: 704,
-                          child: Container(
-                            height: 32,
-                            width: 32,
-                            color: Colors.red,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              child: Text(
-                'Detaily objednávky',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  OrderItem(
-                      label: 'Stôl pre 4 osoby',
-                      icon: Icons.table_chart_outlined),
-                  OrderItem(
-                      label: 'Jakub Jelínek', icon: Icons.person_outlined),
-                  OrderItem(
-                    label:
-                        '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
-                    icon: Icons.calendar_today_outlined,
-                  ),
-                  OrderItem(
-                    label: _reservationTime?.format(context) ??
-                        'Vyberte čas rezervácie',
-                    icon: Icons.access_time_outlined,
-                    openTime: true,
-                    callback: () async {
-                      var time = await showTimePicker(
-                          context: context, initialTime: TimeOfDay.now());
-                      if (time != null) {
-                        setState(() {
-                          _reservationTime = time;
-                        });
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              height: 48,
-              margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () => {},
-                  // onPressed: _reservationDate == null
-                  //     ? null
-                  //     : () => {
-                  //           context.vRouter.to(
-                  //               '/tabs/restaurants/${_restaurant.id}/order/${_reservationDate!.toIso8601String()}')
-                  //         },
-                  child: Text('Záväzne objednať')),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -293,6 +230,127 @@ class OrderItem extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+enum TableState { available, reserved, selected }
+enum TableType { square, circle }
+
+class OrderTable extends StatelessWidget {
+  OrderTable({Key? key, required this.tableState, required this.tableType})
+      : super(key: key);
+
+  TableState tableState;
+  TableType tableType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: tableState == TableState.reserved ? 0.2 : 1,
+      child: Container(
+        width: 32,
+        height: 32,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: 7.11,
+                height: 7.11,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(1),
+                  gradient: LinearGradient(
+                      colors: [
+                        Colors.white,
+                        Colors.black,
+                      ],
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      stops: [0.5, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 7.11,
+                height: 7.11,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(1),
+                  gradient: LinearGradient(
+                      colors: [
+                        Colors.white,
+                        Colors.black,
+                      ],
+                      begin: FractionalOffset.centerLeft,
+                      end: FractionalOffset.centerRight,
+                      stops: [0.5, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 7.11,
+                height: 7.11,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(1),
+                  gradient: LinearGradient(
+                      colors: [
+                        Colors.white,
+                        Colors.black,
+                      ],
+                      begin: FractionalOffset.bottomCenter,
+                      end: FractionalOffset.topCenter,
+                      stops: [0.5, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                width: 7.11,
+                height: 7.11,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(1),
+                  gradient: LinearGradient(
+                      colors: [
+                        Colors.white,
+                        Colors.black,
+                      ],
+                      begin: FractionalOffset.centerRight,
+                      end: FractionalOffset.centerLeft,
+                      stops: [0.5, 1.0],
+                      tileMode: TileMode.clamp),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 28.44,
+                height: 28.44,
+                decoration: BoxDecoration(
+                  color: tableState == TableState.selected
+                      ? Colors.blue
+                      : Theme.of(context).primaryColor,
+                  borderRadius: tableType == TableType.circle
+                      ? BorderRadius.circular(100)
+                      : BorderRadius.circular(2),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

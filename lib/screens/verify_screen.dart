@@ -62,6 +62,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 child: Form(
                   key: _formKey,
                   child: PinCodeTextField(
+                    cursorColor: Theme.of(context).primaryColor,
+                    pinTheme: PinTheme(
+                      activeColor: Colors.black,
+                      selectedColor: Theme.of(context).primaryColor,
+                      inactiveColor: Colors.grey,
+                    ),
                     enablePinAutofill: true,
                     onChanged: (value) {
                       setState(() {

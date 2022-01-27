@@ -181,12 +181,15 @@ class RestaurantCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
+                height: 120,
+                width: double.infinity,
                 padding: EdgeInsets.all(4),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(16),
                       topRight: Radius.circular(16)),
                   child: CachedNetworkImage(
+                      fit: BoxFit.fill,
                       placeholder: (context, url) => const Center(
                           child: CircularProgressIndicator.adaptive()),
                       errorWidget: (context, url, error) =>

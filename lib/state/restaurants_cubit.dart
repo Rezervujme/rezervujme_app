@@ -12,19 +12,19 @@ class RestaurantsCubit extends Cubit<List<Restaurant>> {
             name: 'Primo Amore',
             address: 'Námestie 1. mája 18',
             image:
-                'https://i.picsum.photos/id/237/1200/630.jpg?hmac=NV7OupHtLSM1agzr2beogbePuaTRXq3i7W1Es-TZfbw'),
+                'https://media.istockphoto.com/photos/modern-caffe-interior-with-long-bar-picture-id1032250912?k=20&m=1032250912&s=612x612&w=0&h=ywXZhJ_yUQ9HS6wkG6lrNZCDWDMQx15zbVD99ewaDf8='),
         Restaurant(
             id: 2,
             name: 'Hostinec u Deda',
             address: 'Zálužická 49',
             image:
-                'https://i.picsum.photos/id/236/1200/630.jpg?hmac=0iz9185-Q8RfpevWe0izctxPBnDpmKPwlauCOBMism4'),
+                'https://hostinecudeda.sk/wp-content/uploads/2016/06/hostinecudeda-8-1030x687.jpg'),
         Restaurant(
             id: 3,
             name: 'Basilicò',
             address: 'Dunajská 25',
             image:
-                'https://i.picsum.photos/id/235/1200/630.jpg?hmac=s5VslXcq5gBQjo6WCZBcOC36bFCASPWmtbaKhVkgkAY')
+                'https://media-cdn.tripadvisor.com/media/photo-s/1b/3b/60/7e/basilico.jpg')
       ]..shuffle();
       emit(newState);
     });

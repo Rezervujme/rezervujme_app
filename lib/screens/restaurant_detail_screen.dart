@@ -34,6 +34,45 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: Container(
+          margin: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(64),
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+          child: IconButton(
+            splashRadius: 24,
+            onPressed: () => context.vRouter.pop(),
+            icon: Icon(
+              Icons.chevron_left_outlined,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(8),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(64),
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
+            child: IconButton(
+              splashRadius: 24,
+              onPressed: () => context.vRouter.pop(),
+              icon: Icon(
+                Icons.star_border_outlined,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         top: false,
         bottom: false,
@@ -51,6 +90,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                         children: [
                           Stack(children: [
                             Container(
+                              width: double.infinity,
                               height: 256,
                               child: CachedNetworkImage(
                                 imageUrl: _restaurant.image,
@@ -158,38 +198,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                   ],
                 ),
               ),
-              SafeArea(
-                left: false,
-                right: false,
-                bottom: false,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => context.vRouter.pop(),
-                      child: Icon(
-                        Icons.chevron_left_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(CircleBorder()),
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).scaffoldBackgroundColor)),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => {},
-                      child: Icon(
-                        Icons.star_outline,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(CircleBorder()),
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).scaffoldBackgroundColor)),
-                    )
-                  ],
-                ),
-              ),
               Positioned(
                   bottom: 0,
                   child: Container(
@@ -262,10 +270,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                 ),
                                 onPressed: _reservationDate == null
                                     ? null
-                                    : () => {
-                                          context.vRouter.to(
-                                              '/tabs/restaurants/${_restaurant.id}/order/${_reservationDate!.toIso8601String()}')
-                                        },
+                                    : () => context.vRouter.to(
+                                        '/tabs/restaurants/${_restaurant.id}/order/${_reservationDate!.toIso8601String()}'),
                                 child: Text('Vybrať stôl')),
                           ),
                         )
