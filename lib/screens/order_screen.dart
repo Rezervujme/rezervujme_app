@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:rezervujme_app/extensions/string.dart';
@@ -28,6 +28,7 @@ class _OrderScreenState extends State<OrderScreen> {
   late Restaurant _restaurant;
   late DateTime _reservationDate;
   TimeOfDay? _reservationTime;
+  int? _selectedTable;
 
   @override
   void initState() {
@@ -48,6 +49,7 @@ class _OrderScreenState extends State<OrderScreen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
           elevation: 0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           foregroundColor: Theme.of(context).primaryColor,
@@ -79,25 +81,80 @@ class _OrderScreenState extends State<OrderScreen> {
                       border: Border.all(color: Colors.grey)),
                   child: AspectRatio(
                     aspectRatio: 1,
-                    child: InteractiveViewer(
-                      minScale: 0.1,
-                      maxScale: 4,
-                      transformationController: _controller,
-                      constrained: false,
-                      child: SizedBox(
-                        width: 768,
-                        height: 768,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: 32,
-                              left: 32,
-                              child: OrderTable(
-                                tableState: TableState.available,
-                                tableType: TableType.square,
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        setState(() {
+                          _selectedTable = null;
+                        });
+                      },
+                      child: InteractiveViewer(
+                        minScale: 0.1,
+                        maxScale: 4,
+                        transformationController: _controller,
+                        constrained: false,
+                        child: SizedBox(
+                          width: 768,
+                          height: 768,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 32,
+                                left: 32,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    setState(() {
+                                      _selectedTable = 1;
+                                    });
+                                  },
+                                  child: OrderTable(
+                                    tableState: _selectedTable == 1
+                                        ? TableState.selected
+                                        : TableState.available,
+                                    tableType: TableType.square,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                              Positioned(
+                                top: 128,
+                                left: 128,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    setState(() {
+                                      _selectedTable = 2;
+                                    });
+                                  },
+                                  child: OrderTable(
+                                    tableState: _selectedTable == 2
+                                        ? TableState.selected
+                                        : TableState.available,
+                                    tableType: TableType.square,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 512,
+                                left: 64,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    setState(() {
+                                      _selectedTable = 2;
+                                    });
+                                  },
+                                  child: OrderTable(
+                                    tableState: TableState.reserved,
+                                    tableType: TableType.square,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -115,7 +172,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       OrderItem(
                           label: _restaurant.name, icon: Icons.house_outlined),
                       OrderItem(
-                          label: 'Stôl pre 4 osoby',
+                          label: this._selectedTable != null
+                              ? 'Stôl ${_selectedTable} - pre 4 osoby'
+                              : 'Vyberte stôl',
                           icon: Icons.table_chart_outlined),
                       OrderItem(
                           label: 'Jakub Jelínek', icon: Icons.person_outlined),
@@ -175,9 +234,10 @@ class _OrderScreenState extends State<OrderScreen> {
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
                       ),
-                      onPressed: _reservationTime == null
-                          ? null
-                          : () => context.vRouter.to('/order-success'),
+                      onPressed:
+                          _reservationTime == null || _selectedTable == null
+                              ? null
+                              : () => context.vRouter.to('/order-success'),
                       child: Text('Záväzne objednať')),
                 ),
               ],
@@ -249,7 +309,7 @@ class OrderTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: tableState == TableState.reserved ? 0.2 : 1,
+      opacity: tableState == TableState.reserved ? 0.3 : 1,
       child: Container(
         width: 32,
         height: 32,

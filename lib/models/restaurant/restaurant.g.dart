@@ -11,7 +11,13 @@ _$_Restaurant _$$_RestaurantFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       name: json['name'] as String,
       address: json['address'] as String,
-      image: json['image'] as String,
+      description: json['description'] as String,
+      openingHours: json['opening_hours'] as String,
+      telephoneNumber: json['telephone_number'] as String,
+      reservationAdvanceHours:
+          (json['reservation_advance_hours'] as num).toDouble(),
+      type: json['type'] as String,
+      primaryTableView: json['primary_table_view'] as String?,
     );
 
 Map<String, dynamic> _$$_RestaurantToJson(_$_Restaurant instance) =>
@@ -19,5 +25,10 @@ Map<String, dynamic> _$$_RestaurantToJson(_$_Restaurant instance) =>
       'id': instance.id,
       'name': instance.name,
       'address': instance.address,
-      'image': instance.image,
+      'description': instance.description,
+      'opening_hours': instance.openingHours,
+      'telephone_number': instance.telephoneNumber,
+      'reservation_advance_hours': instance.reservationAdvanceHours,
+      'type': instance.type,
+      'primary_table_view': instance.primaryTableView,
     };

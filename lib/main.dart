@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rezervujme_app/screens/intro_screen.dart';
+import 'package:rezervujme_app/screens/notifications_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
-import 'package:rezervujme_app/screens/order_success_screen.dart';
 import 'package:rezervujme_app/screens/order_screen.dart';
+import 'package:rezervujme_app/screens/order_success_screen.dart';
 import 'package:rezervujme_app/screens/register_screen.dart';
 import 'package:rezervujme_app/screens/settings_screen.dart';
-import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:rezervujme_app/screens/verify_screen.dart';
+import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vrouter/vrouter.dart';
 
-import 'screens/restaurants_screen.dart';
 import 'screens/restaurant_detail_screen.dart';
+import 'screens/restaurants_screen.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -61,12 +64,15 @@ class MyApp extends StatelessWidget {
                 VWidget(path: '/onboarding', widget: const OnboardingScreen())
               ]),
           VWidget(path: '/intro', widget: const IntroScreen(), stackedRoutes: [
-            VWidget(path: 'verify', widget: const VerifyScreen()),
+            VWidget.builder(
+                path: 'verify/:phoneNumber',
+                builder: (context, state) => VerifyScreen(
+                    phoneNumber: context.vRouter.pathParameters['phoneNumber']
+                        as String)),
             VWidget(path: 'register', widget: const RegisterScreen())
           ]),
 
           VWidget(path: '/order-success', widget: const OrderSuccessScreen()),
-
           //TABS
           VNester(
             path: '/tabs',
@@ -102,6 +108,8 @@ class MyApp extends StatelessWidget {
                             ),
                           )
                         ]),
+                    VWidget(
+                        path: 'notifications', widget: NotificationsScreen())
                   ])
             ],
             nestedRoutes: [
@@ -109,7 +117,8 @@ class MyApp extends StatelessWidget {
                 path: 'restaurants',
                 aliases: const [
                   'restaurants/:restaurantId',
-                  'restaurants/:restaurantId/order/:date'
+                  'restaurants/:restaurantId/order/:date',
+                  'notifications'
                 ],
                 widget: const RestaurantsScreen(),
                 key: const ValueKey('restaurants'),
@@ -117,9 +126,9 @@ class MyApp extends StatelessWidget {
               ),
               VWidget(
                 transitionDuration: Duration.zero,
-                path: 'settings',
+                path: 'profile',
                 widget: const SettingsScreen(),
-              )
+              ),
             ],
           ),
         ],
@@ -133,7 +142,7 @@ class TabsScaffold extends StatelessWidget {
 
   final Widget child;
 
-  final List<String> _tabs = const ['/tabs/restaurants', '/tabs/settings'];
+  final List<String> _tabs = const ['/tabs/restaurants', '/tabs/profile'];
 
   @override
   Widget build(BuildContext context) {
@@ -146,9 +155,9 @@ class TabsScaffold extends StatelessWidget {
         onTap: (index) => context.vRouter.to(_tabs[index]),
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.restaurant), label: 'Reštaurácie'),
+              icon: Icon(Icons.restaurant_outlined), label: 'Reštaurácie'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Nastavenia'),
+              icon: Icon(Icons.person_outlined), label: 'Profil'),
         ],
       ),
     );

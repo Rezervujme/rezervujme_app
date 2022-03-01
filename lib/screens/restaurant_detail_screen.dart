@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:rezervujme_app/extensions/string.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:vrouter/vrouter.dart';
 
@@ -36,16 +37,22 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(64),
-            color: Theme.of(context).scaffoldBackgroundColor,
-          ),
+              borderRadius: BorderRadius.circular(64),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    blurRadius: 4,
+                    offset: const Offset(1, 3))
+              ]),
           child: IconButton(
-            splashRadius: 24,
+            tooltip: 'Späť',
             onPressed: () => context.vRouter.pop(),
             icon: Icon(
               Icons.chevron_left_outlined,
@@ -59,17 +66,33 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(64),
-              color: Theme.of(context).scaffoldBackgroundColor,
-            ),
-            child: IconButton(
-              splashRadius: 24,
-              onPressed: () => context.vRouter.pop(),
+                borderRadius: BorderRadius.circular(64),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      blurRadius: 4,
+                      offset: const Offset(1, 3))
+                ]),
+            child: PopupMenuButton(
               icon: Icon(
-                Icons.star_border_outlined,
+                Icons.more_vert_outlined,
                 color: Theme.of(context).primaryColor,
               ),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  child: Text('Nothing here. Yet'),
+                )
+              ],
             ),
+            // IconButton(
+            //   splashRadius: 22,
+            //   onPressed: () => {},
+            //   icon: Icon(
+            //     Icons.more_vert_outlined,
+            //     color: Theme.of(context).primaryColor,
+            //   ),
+            // ),
           ),
         ],
       ),
@@ -93,7 +116,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                               width: double.infinity,
                               height: 256,
                               child: CachedNetworkImage(
-                                imageUrl: _restaurant.image,
+                                imageUrl: 'https://via.placeholder.com/150',
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -233,6 +256,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                               });
                             },
                             child: Ink(
+                              color: Colors.white,
                               child: Container(
                                 padding: EdgeInsets.all(16),
                                 child: Row(

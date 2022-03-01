@@ -9,7 +9,16 @@ class Restaurant with _$Restaurant {
       {required int id,
       required String name,
       required String address,
-      required String image}) = _Restaurant;
+      required String description,
+      @JsonKey(name: 'opening_hours')
+          required String openingHours,
+      @JsonKey(name: 'telephone_number')
+          required String telephoneNumber,
+      @JsonKey(name: 'reservation_advance_hours')
+          required double reservationAdvanceHours,
+      required String type,
+      @JsonKey(name: 'primary_table_view')
+          String? primaryTableView}) = _Restaurant;
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);

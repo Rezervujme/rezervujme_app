@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:rezervujme_app/models/category/category.dart';
-import 'package:vrouter/vrouter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rezervujme_app/models/category/category.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
+import 'package:vrouter/vrouter.dart';
 
 class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({Key? key}) : super(key: key);
@@ -28,133 +28,110 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).primaryColor,
-      //   title: const Text('Reštaurácie'),
-      // ),
-      // bottomNavigationBar: Container(),
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,
-        child: SafeArea(
-          child: BlocBuilder<RestaurantsCubit, List<Restaurant>>(
-            builder: (context, state) {
-              print(state.toString());
-              return state.isEmpty
-                  ? const Center(child: CircularProgressIndicator.adaptive())
-                  : RefreshIndicator(
-                      onRefresh: refreshRestaurants,
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 16, right: 16),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        margin:
-                                            const EdgeInsets.only(right: 16),
-                                        child: CupertinoSearchTextField(
-                                            borderRadius:
-                                                BorderRadius.circular(100)),
-                                      )),
-                                      const NotificationButton()
-                                    ]),
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Ahoj, Matej!",
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                    "Kam sa pôjdeš najbližšie najebať?"),
-                              ),
-                              SizedBox(
-                                height: 128,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    CategoryCard(
-                                      category: Category(
-                                          id: 1,
-                                          name: 'Romantické',
-                                          iconId: 0xe25c),
-                                    ),
-                                    CategoryCard(
-                                      category: Category(
-                                          id: 1, name: 'Lacné', iconId: 0xf184),
-                                    ),
-                                    CategoryCard(
-                                      category: Category(
-                                          id: 1,
-                                          name: 'Neformálne',
-                                          iconId: 0xf188),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 200,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.length,
-                                    itemBuilder: (context, index) {
-                                      final restaurant = state[index];
-                                      return RestaurantCard(
-                                          restaurant: restaurant);
-                                    }),
-                              ),
-                              SizedBox(
-                                height: 200,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.length,
-                                    itemBuilder: (context, index) {
-                                      final restaurant = state[index];
-                                      return RestaurantCard(
-                                          restaurant: restaurant);
-                                    }),
-                              ),
-                              SizedBox(
-                                height: 200,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.length,
-                                    itemBuilder: (context, index) {
-                                      final restaurant = state[index];
-                                      return RestaurantCard(
-                                          restaurant: restaurant);
-                                    }),
-                              ),
-                              SizedBox(
-                                height: 200,
-                                child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.length,
-                                    itemBuilder: (context, index) {
-                                      final restaurant = state[index];
-                                      return RestaurantCard(
-                                          restaurant: restaurant);
-                                    }),
-                              ),
-                            ],
-                          ),
-                        ),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(double.infinity, kToolbarHeight),
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.dark,
+            child: SafeArea(
+              child: Container(
+                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        child: CupertinoSearchTextField(
+                            borderRadius: BorderRadius.circular(100)),
                       ),
-                    );
-            },
+                    ),
+                    const NotificationButton()
+                  ],
+                ),
+              ),
+            ),
           ),
+        ),
+        // appBar: AppBar(
+        //   backgroundColor: Theme.of(context).primaryColor,
+        //   title: const Text('Reštaurácie'),
+        // ),
+        // bottomNavigationBar: Container(),
+        body: BlocBuilder<RestaurantsCubit, List<Restaurant>>(
+          builder: (context, state) {
+            print(state.toString());
+            return state.isEmpty
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : RefreshIndicator(
+                    onRefresh: refreshRestaurants,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 16, right: 16),
+                      child: Column(
+                        children: [
+                          // SizedBox(
+                          //   height: 128,
+                          //   child: ListView(
+                          //     scrollDirection: Axis.horizontal,
+                          //     children: [
+                          //       CategoryCard(
+                          //         category: Category(
+                          //             id: 1,
+                          //             name: 'Romantické',
+                          //             iconId: 0xe25c),
+                          //       ),
+                          //       CategoryCard(
+                          //         category: Category(
+                          //             id: 1, name: 'Lacné', iconId: 0xf184),
+                          //       ),
+                          //       CategoryCard(
+                          //         category: Category(
+                          //             id: 1,
+                          //             name: 'Neformálne',
+                          //             iconId: 0xf188),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          Expanded(
+                            child: ListView.builder(
+                                itemCount: state.length + 1,
+                                itemBuilder: (context, index) {
+                                  print(state.length);
+                                  if (index == 0) {
+                                    return Column(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Ahoj, MENO!",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(bottom: 16),
+                                          alignment: Alignment.centerLeft,
+                                          child: const Text(
+                                              "Kam si pôjdeš najbližšie sadnúť?"),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  final restaurant = state[index - 1];
+                                  return RestaurantCard(restaurant: restaurant);
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+          },
         ),
       ),
     );
@@ -170,44 +147,47 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      width: 200,
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () => context.vRouter.to('/tabs/restaurants/${restaurant.id}'),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 120,
-                width: double.infinity,
-                padding: EdgeInsets.all(4),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16)),
-                  child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) => const Center(
-                          child: CircularProgressIndicator.adaptive()),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      imageUrl: restaurant.image),
-                ),
+          child: Container(
+            padding: EdgeInsets.all(4),
+            child: Ink(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12)),
+                      child: CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator.adaptive()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                          imageUrl: 'https://via.placeholder.com/150'),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      restaurant.name,
+                    ),
+                    margin: const EdgeInsets.all(4),
+                  ),
+                  Container(
+                    child: Text(restaurant.address),
+                    margin: const EdgeInsets.all(4),
+                  ),
+                ],
               ),
-              Container(
-                child: Text(
-                  restaurant.name,
-                ),
-                margin: const EdgeInsets.all(4),
-              ),
-              Container(
-                child: Text(restaurant.address),
-                margin: const EdgeInsets.all(4),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -235,14 +215,14 @@ class _NotificationButtonState extends State<NotificationButton> {
         children: [
           InkWell(
             customBorder: const CircleBorder(),
-            onTap: () => {},
+            onTap: () => context.vRouter.to('/tabs/notifications'),
             child: Ink(
               height: 32,
               width: 32,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).primaryColor,
-                  backgroundBlendMode: BlendMode.color),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
               child: const Icon(
                 Icons.notifications_outlined,
                 color: Colors.white,
@@ -258,9 +238,9 @@ class _NotificationButtonState extends State<NotificationButton> {
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                     width: 12,
                     height: 12,
@@ -305,8 +285,8 @@ class _CategoryCardState extends State<CategoryCard> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                Icon(
-                  IconData(widget.category.iconId, fontFamily: 'MaterialIcons'),
+                const Icon(
+                  Icons.star_border_outlined,
                   size: 64,
                 ),
                 Text(

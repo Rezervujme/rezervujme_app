@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:vrouter/vrouter.dart';
 
 class VerifyScreen extends StatefulWidget {
-  const VerifyScreen({Key? key}) : super(key: key);
+  const VerifyScreen({Key? key, required this.phoneNumber}) : super(key: key);
 
+  final String phoneNumber;
   @override
   _VerifyScreenState createState() => _VerifyScreenState();
 }
@@ -18,7 +20,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   String _currentPin = '';
 
-  void _verifyPin() {
+  void _verifyPin() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
       print('error');
       print(_currentPin);
@@ -26,8 +28,30 @@ class _VerifyScreenState extends State<VerifyScreen> {
       _errorAnimationController.add(ErrorAnimationType.shake);
       return;
     }
+    try {
+      var data = await Dio().post(
+          '${dotenv.get('APP_URL')}/api/v1/auth/sms/register/register',
+          data: {"phone_number": widget.phoneNumber, "auth_code": _currentPin});
+      print(data);
+      // context.vRouter.to('/intro/register');
+    } catch (err) {
+      if (err is DioError) {
+        if (err.response?.data['error'] != null) {
+          var snackBar = SnackBar(
+            content: Text(err.response?.data['error']),
+            duration: const Duration(seconds: 1),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          var snackBar = const SnackBar(
+            content: Text('An unknown error has occurred.'),
+            duration: Duration(seconds: 1),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      }
+    }
     print(_currentPin);
-    context.vRouter.to('/intro/register');
 
     // context.vRouter.to('/tabs');
   }
