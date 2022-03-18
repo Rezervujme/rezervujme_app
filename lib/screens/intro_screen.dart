@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:vrouter/vrouter.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({Key? key}) : super(key: key);
@@ -64,28 +63,7 @@ class _LoginFormState extends State<LoginForm> {
   void submitNumber() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    try {
-      await Dio().post(
-          '${dotenv.get('APP_URL')}/api/v1/auth/sms/register/request',
-          data: {'phone_number': _phoneNumber.phoneNumber});
-      context.vRouter.to('/intro/verify/${_phoneNumber.phoneNumber}');
-    } catch (err) {
-      if (err is DioError) {
-        if (err.response?.data['error'] != null) {
-          var snackBar = SnackBar(
-            content: Text(err.response?.data['error']),
-            duration: const Duration(seconds: 1),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        } else {
-          var snackBar = const SnackBar(
-            content: Text('An unknown error has occurred.'),
-            duration: Duration(seconds: 1),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-      }
-    }
+    context.read<AuthCubit>().requestCode(context, _phoneNumber);
   }
 
   @override

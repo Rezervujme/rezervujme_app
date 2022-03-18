@@ -1,9 +1,7 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({Key? key, required this.phoneNumber}) : super(key: key);
@@ -15,52 +13,25 @@ class VerifyScreen extends StatefulWidget {
 
 class _VerifyScreenState extends State<VerifyScreen> {
   final _formKey = GlobalKey<FormState>();
-  final StreamController<ErrorAnimationType> _errorAnimationController =
-      StreamController<ErrorAnimationType>();
 
   String _currentPin = '';
+  String _name = '';
+  String _surname = '';
+  String _email = '';
 
   void _verifyPin() async {
     if (!(_formKey.currentState?.validate() ?? false)) {
-      print('error');
-      print(_currentPin);
-
-      _errorAnimationController.add(ErrorAnimationType.shake);
       return;
     }
-    try {
-      var data = await Dio().post(
-          '${dotenv.get('APP_URL')}/api/v1/auth/sms/register/register',
-          data: {"phone_number": widget.phoneNumber, "auth_code": _currentPin});
-      print(data);
-      // context.vRouter.to('/intro/register');
-    } catch (err) {
-      if (err is DioError) {
-        if (err.response?.data['error'] != null) {
-          var snackBar = SnackBar(
-            content: Text(err.response?.data['error']),
-            duration: const Duration(seconds: 1),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        } else {
-          var snackBar = const SnackBar(
-            content: Text('An unknown error has occurred.'),
-            duration: Duration(seconds: 1),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-      }
-    }
-    print(_currentPin);
-
-    // context.vRouter.to('/tabs');
+    context.read<AuthCubit>().register(
+        context, widget.phoneNumber, _currentPin, _email, _name, _surname);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Potvrdenie'),
+        title: const Text('Registrácia'),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -72,12 +43,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 32, bottom: 8),
                 child: Text(
-                  'Potvrdenie',
+                  'Registrácia',
                   style: Theme.of(context).textTheme.headline4,
                 ),
               ),
               const Text(
-                'Zadajte pin, ktorý sme zaslali na vaše telefónne číslo.',
+                'Zadajte pin, ktorý sme zaslali na vaše telefónne číslo a vyplňte vaše údaje',
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
@@ -85,25 +56,109 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 margin: const EdgeInsets.only(top: 16),
                 child: Form(
                   key: _formKey,
-                  child: PinCodeTextField(
-                    cursorColor: Theme.of(context).primaryColor,
-                    pinTheme: PinTheme(
-                      activeColor: Colors.black,
-                      selectedColor: Theme.of(context).primaryColor,
-                      inactiveColor: Colors.grey,
-                    ),
-                    enablePinAutofill: true,
-                    onChanged: (value) {
-                      setState(() {
-                        _currentPin = value;
-                      });
-                    },
-                    validator: (pin) => pin?.length == 6 ? null : "",
-                    length: 6,
-                    appContext: context,
-                    autoFocus: true,
-                    keyboardType: TextInputType.number,
-                    errorAnimationController: _errorAnimationController,
+                  child: Column(
+                    children: [
+                      PinCodeTextField(
+                        cursorColor: Theme.of(context).primaryColor,
+                        pinTheme: PinTheme(
+                          activeColor: Colors.black,
+                          selectedColor: Theme.of(context).primaryColor,
+                          inactiveColor: Colors.grey,
+                        ),
+                        enablePinAutofill: true,
+                        onChanged: (value) {
+                          setState(() {
+                            _currentPin = value;
+                          });
+                        },
+                        validator: (pin) => pin?.length == 6 ? null : "",
+                        length: 6,
+                        appContext: context,
+                        autoFocus: true,
+                        keyboardType: TextInputType.number,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Meno',
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1.5)),
+                          floatingLabelStyle:
+                              TextStyle(color: Colors.grey[700]),
+                        ),
+                        cursorColor: Theme.of(context).primaryColor,
+                        keyboardType: TextInputType.name,
+                        autofillHints: const [AutofillHints.givenName],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Prosím zadajte meno';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _name = value;
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Priezvisko',
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1.5)),
+                          floatingLabelStyle:
+                              TextStyle(color: Colors.grey[700]),
+                        ),
+                        cursorColor: Theme.of(context).primaryColor,
+                        keyboardType: TextInputType.name,
+                        autofillHints: const [AutofillHints.familyName],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Prosím zadajte priezvisko';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _surname = value;
+                          });
+                        },
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(),
+                          labelText: 'Email',
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1.5)),
+                          floatingLabelStyle:
+                              TextStyle(color: Colors.grey[700]),
+                        ),
+                        cursorColor: Theme.of(context).primaryColor,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              !RegExp(r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+                                  .hasMatch(value)) {
+                            return 'Prosím zadajte platný email';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _email = value;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -115,7 +170,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
                   ),
-                  onPressed: _currentPin.length == 6 ? _verifyPin : null,
+                  onPressed: _currentPin.length == 6 &&
+                          _name.isNotEmpty &&
+                          _surname.isNotEmpty &&
+                          _email.isNotEmpty
+                      ? _verifyPin
+                      : null,
                   child: const Text(
                     'Potvrdiť',
                     style: TextStyle(fontSize: 16),

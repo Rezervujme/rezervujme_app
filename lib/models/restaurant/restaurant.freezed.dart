@@ -35,7 +35,7 @@ class _$RestaurantTearOff {
           required double reservationAdvanceHours,
       required String type,
       @JsonKey(name: 'primary_table_view')
-          String? primaryTableView}) {
+          required String? primaryTableView}) {
     return _Restaurant(
       id: id,
       name: name,
@@ -262,7 +262,7 @@ class _$_Restaurant implements _Restaurant {
           required this.reservationAdvanceHours,
       required this.type,
       @JsonKey(name: 'primary_table_view')
-          this.primaryTableView});
+          required this.primaryTableView});
 
   factory _$_Restaurant.fromJson(Map<String, dynamic> json) =>
       _$$_RestaurantFromJson(json);
@@ -354,7 +354,7 @@ abstract class _Restaurant implements Restaurant {
           required double reservationAdvanceHours,
       required String type,
       @JsonKey(name: 'primary_table_view')
-          String? primaryTableView}) = _$_Restaurant;
+          required String? primaryTableView}) = _$_Restaurant;
 
   factory _Restaurant.fromJson(Map<String, dynamic> json) =
       _$_Restaurant.fromJson;

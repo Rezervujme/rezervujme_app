@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rezervujme_app/models/auth/auth.dart';
 import 'package:rezervujme_app/models/category/category.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:vrouter/vrouter.dart';
 
@@ -22,6 +24,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
 
   @override
   void initState() {
+    context.read<AuthCubit>().loadAuth();
     context.read<RestaurantsCubit>().fetchRestaurants();
     super.initState();
   }
@@ -72,30 +75,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       margin: const EdgeInsets.only(left: 16, right: 16),
                       child: Column(
                         children: [
-                          // SizedBox(
-                          //   height: 128,
-                          //   child: ListView(
-                          //     scrollDirection: Axis.horizontal,
-                          //     children: [
-                          //       CategoryCard(
-                          //         category: Category(
-                          //             id: 1,
-                          //             name: 'Romantické',
-                          //             iconId: 0xe25c),
-                          //       ),
-                          //       CategoryCard(
-                          //         category: Category(
-                          //             id: 1, name: 'Lacné', iconId: 0xf184),
-                          //       ),
-                          //       CategoryCard(
-                          //         category: Category(
-                          //             id: 1,
-                          //             name: 'Neformálne',
-                          //             iconId: 0xf188),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           Expanded(
                             child: ListView.builder(
                                 itemCount: state.length + 1,
@@ -106,12 +85,16 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                       children: [
                                         Container(
                                           alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Ahoj, MENO!",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          ),
+                                          child: BlocBuilder<AuthCubit, Auth>(
+                                              builder: (context, state) {
+                                                print(state.toString());
+                                            return Text(
+                                              "Ahoj, ${state.user?.name}!",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            );
+                                          }),
                                         ),
                                         Container(
                                           margin:

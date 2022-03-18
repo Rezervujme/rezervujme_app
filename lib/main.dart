@@ -7,9 +7,9 @@ import 'package:rezervujme_app/screens/notifications_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
 import 'package:rezervujme_app/screens/order_screen.dart';
 import 'package:rezervujme_app/screens/order_success_screen.dart';
-import 'package:rezervujme_app/screens/register_screen.dart';
 import 'package:rezervujme_app/screens/settings_screen.dart';
 import 'package:rezervujme_app/screens/verify_screen.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vrouter/vrouter.dart';
@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<RestaurantsCubit>(
           create: (BuildContext context) => RestaurantsCubit(),
+        ),
+        BlocProvider<AuthCubit>(
+          create: (BuildContext context) => AuthCubit(),
         ),
       ],
       child: VRouter(
@@ -58,7 +61,14 @@ class MyApp extends StatelessWidget {
               beforeEnter: (vRedirector) async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 var onboarded = prefs.getBool('onboarded') ?? false;
-                // if (onboarded) vRedirector.to('/tabs/restaurants');
+                if (onboarded) {
+                  var token = prefs.getString('token') ?? '';
+                  if (token.isNotEmpty) {
+                    vRedirector.to('/tabs/restaurants');
+                  } else {
+                    vRedirector.to('/intro');
+                  }
+                }
               },
               stackedRoutes: [
                 VWidget(path: '/onboarding', widget: const OnboardingScreen())
@@ -69,7 +79,6 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) => VerifyScreen(
                     phoneNumber: context.vRouter.pathParameters['phoneNumber']
                         as String)),
-            VWidget(path: 'register', widget: const RegisterScreen())
           ]),
 
           VWidget(path: '/order-success', widget: const OrderSuccessScreen()),

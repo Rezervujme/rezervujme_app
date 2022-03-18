@@ -210,11 +210,11 @@ class _OrderScreenState extends State<OrderScreen> {
                               minLines: 2,
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
-                              style: TextStyle(fontSize: 13),
+                              style: const TextStyle(fontSize: 13),
                               cursorColor: Theme.of(context).primaryColor,
                               decoration: InputDecoration(
                                   hintText: 'Nepovinné',
-                                  hintStyle: TextStyle(fontSize: 13),
+                                  hintStyle: const TextStyle(fontSize: 13),
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Theme.of(context).primaryColor,

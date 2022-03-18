@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -14,7 +16,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Nastavenia'),
       ),
-      body: const Center(child: Text('Nastavenia')),
+      body: Column(
+        children: [
+          ListTile(
+              title: Text('logout'),
+              onTap: () async =>
+                  await context.read<AuthCubit>().logout(context))
+        ],
+      ),
     );
   }
 }
