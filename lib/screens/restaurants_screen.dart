@@ -24,7 +24,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
 
   @override
   void initState() {
-    context.read<AuthCubit>().loadAuth();
     context.read<RestaurantsCubit>().fetchRestaurants();
     super.initState();
   }
@@ -49,6 +48,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       child: Container(
                         margin: const EdgeInsets.only(right: 16),
                         child: CupertinoSearchTextField(
+                            placeholder: 'Hľadať reštauráciu...',
                             borderRadius: BorderRadius.circular(100)),
                       ),
                     ),
@@ -87,7 +87,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                           alignment: Alignment.centerLeft,
                                           child: BlocBuilder<AuthCubit, Auth>(
                                               builder: (context, state) {
-                                                print(state.toString());
+                                            print(state.toString());
                                             return Text(
                                               "Ahoj, ${state.user?.name}!",
                                               style: Theme.of(context)
@@ -198,7 +198,7 @@ class _NotificationButtonState extends State<NotificationButton> {
         children: [
           InkWell(
             customBorder: const CircleBorder(),
-            onTap: () => context.vRouter.to('/tabs/notifications'),
+            onTap: () => context.vRouter.to('/tabs/reservations'),
             child: Ink(
               height: 32,
               width: 32,

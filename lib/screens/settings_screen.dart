@@ -19,9 +19,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: [
           ListTile(
-              title: Text('logout'),
+              title: Text('Odhlásiť sa'),
               onTap: () async =>
-                  await context.read<AuthCubit>().logout(context))
+                  await context.read<AuthCubit>().logout(context)),
         ],
       ),
     );

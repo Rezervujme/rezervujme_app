@@ -89,11 +89,19 @@ class AuthCubit extends Cubit<Auth> {
   bool isLoggedIn() {
     return state.token != null && state.user != null;
   }
-  
+
   Future<void> logout(BuildContext context) async {
+    emit(Auth(token: null, user: null));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
     prefs.remove('user');
     context.vRouter.to('/intro');
+    try {
+      await Dio().post('${dotenv.get('APP_URL')}/api/v1/auth/invalidate',
+          options:
+              Options(headers: {'Authorization': 'Bearer ${state.token}'}));
+    } catch (err) {
+      print(err);
+    }
   }
 }
