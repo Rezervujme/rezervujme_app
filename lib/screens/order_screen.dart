@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:rezervujme_app/extensions/string.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:vrouter/vrouter.dart';
 
@@ -172,12 +173,14 @@ class _OrderScreenState extends State<OrderScreen> {
                       OrderItem(
                           label: _restaurant.name, icon: Icons.house_outlined),
                       OrderItem(
-                          label: this._selectedTable != null
-                              ? 'Stôl ${_selectedTable} - pre 4 osoby'
+                          label: _selectedTable != null
+                              ? 'Stôl $_selectedTable - pre 4 osoby'
                               : 'Vyberte stôl',
                           icon: Icons.table_chart_outlined),
                       OrderItem(
-                          label: 'Jakub Jelínek', icon: Icons.person_outlined),
+                          label:
+                              '${context.read<AuthCubit>().state.user!.name} ${context.read<AuthCubit>().state.user!.surname}',
+                          icon: Icons.person_outlined),
                       OrderItem(
                         label:
                             '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',

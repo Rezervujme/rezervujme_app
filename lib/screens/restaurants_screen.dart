@@ -24,9 +24,19 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
 
   @override
   void initState() {
-    context.read<RestaurantsCubit>().fetchRestaurants();
+    context.read<RestaurantsCubit>().fetchRestaurants().then((value) =>
+        searchedRestaurants = context.read<RestaurantsCubit>().state);
+
     super.initState();
   }
+
+//   List<Restaurant> searchRestaurants(String search) {
+//     return state
+//         .where((restaurant) => restaurant.name.startsWith(search))
+//         .toList();
+//   }
+// }
+  List<Restaurant>? searchedRestaurants;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +59,14 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                         margin: const EdgeInsets.only(right: 16),
                         child: CupertinoSearchTextField(
                             placeholder: 'Hľadať reštauráciu...',
+                            onChanged: (val) {
+                              setState(() => searchedRestaurants = context
+                                  .read<RestaurantsCubit>()
+                                  .state
+                                  .where(
+                                      (element) => element.name.startsWith(val))
+                                  .toList());
+                            },
                             borderRadius: BorderRadius.circular(100)),
                       ),
                     ),
@@ -66,8 +84,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
         // bottomNavigationBar: Container(),
         body: BlocBuilder<RestaurantsCubit, List<Restaurant>>(
           builder: (context, state) {
-            print(state.toString());
-            return state.isEmpty
+            return searchedRestaurants == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : RefreshIndicator(
                     onRefresh: refreshRestaurants,
@@ -77,9 +94,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                         children: [
                           Expanded(
                             child: ListView.builder(
-                                itemCount: state.length + 1,
+                                itemCount: searchedRestaurants!.length + 1,
                                 itemBuilder: (context, index) {
-                                  print(state.length);
+                                  // print(state.length);
                                   if (index == 0) {
                                     return Column(
                                       children: [
@@ -87,7 +104,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                           alignment: Alignment.centerLeft,
                                           child: BlocBuilder<AuthCubit, Auth>(
                                               builder: (context, state) {
-                                            print(state.toString());
                                             return Text(
                                               "Ahoj, ${state.user?.name}!",
                                               style: Theme.of(context)
@@ -103,6 +119,12 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                           child: const Text(
                                               "Kam si pôjdeš najbližšie sadnúť?"),
                                         ),
+                                        if (searchedRestaurants!.isEmpty)
+                                          Text(
+                                              'Žiadne reštaurácie nevyhovujú vášmu hľadaniu',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption)
                                       ],
                                     );
                                   }
