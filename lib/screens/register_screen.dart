@@ -3,15 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:rezervujme_app/state/auth_cubit.dart';
 
-class VerifyScreen extends StatefulWidget {
-  const VerifyScreen({Key? key, required this.phoneNumber}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key, required this.phoneNumber}) : super(key: key);
 
   final String phoneNumber;
   @override
-  _VerifyScreenState createState() => _VerifyScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _VerifyScreenState extends State<VerifyScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   String _currentPin = '';

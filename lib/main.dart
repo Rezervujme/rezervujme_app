@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rezervujme_app/screens/intro_screen.dart';
+import 'package:rezervujme_app/screens/login_screen.dart';
 import 'package:rezervujme_app/screens/onboarding_screen.dart';
 import 'package:rezervujme_app/screens/order_screen.dart';
 import 'package:rezervujme_app/screens/order_success_screen.dart';
+import 'package:rezervujme_app/screens/register_screen.dart';
 import 'package:rezervujme_app/screens/reservations_screen.dart';
 import 'package:rezervujme_app/screens/settings_screen.dart';
-import 'package:rezervujme_app/screens/verify_screen.dart';
 import 'package:rezervujme_app/state/auth_cubit.dart';
 import 'package:rezervujme_app/state/restaurants_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,8 +93,13 @@ class _RouterState extends State<Router> {
             ]),
         VWidget(path: '/intro', widget: const IntroScreen(), stackedRoutes: [
           VWidget.builder(
-              path: 'verify/:phoneNumber',
-              builder: (context, state) => VerifyScreen(
+              path: 'register/:phoneNumber',
+              builder: (context, state) => RegisterScreen(
+                  phoneNumber:
+                      context.vRouter.pathParameters['phoneNumber'] as String)),
+          VWidget.builder(
+              path: 'login/:phoneNumber',
+              builder: (context, state) => LoginScreen(
                   phoneNumber:
                       context.vRouter.pathParameters['phoneNumber'] as String)),
         ]),
