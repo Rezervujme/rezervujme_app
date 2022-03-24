@@ -72,6 +72,7 @@ class AuthCubit extends Cubit<Auth> {
             "name": name.trim(),
             "surname": surname.trim()
           });
+      print(data.data);
       Auth newState = Auth.fromJson(data.data);
       emit(newState);
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -106,6 +107,7 @@ class AuthCubit extends Cubit<Auth> {
         "phone_number": phoneNumber.trim(),
         "auth_code": pin.trim(),
       });
+      print(data.data);
       Auth newState = Auth.fromJson(data.data);
       emit(newState);
       SharedPreferences prefs = await SharedPreferences.getInstance();

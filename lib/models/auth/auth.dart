@@ -27,8 +27,8 @@ class User with _$User {
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
     @JsonKey(name: 'deleted_at') required DateTime? deletedAt,
     @JsonKey(name: 'is_activated') required bool isActivated,
-    @JsonKey(name: 'is_guest') required bool? isGuest,
-    @JsonKey(name: 'is_superuser') required bool? isSuperuser,
+    @JsonKey(name: 'is_guest') required int? isGuest,
+    @JsonKey(name: 'is_superuser') required int? isSuperuser,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

@@ -39,8 +39,8 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
           ? null
           : DateTime.parse(json['deleted_at'] as String),
       isActivated: json['is_activated'] as bool,
-      isGuest: json['is_guest'] as bool?,
-      isSuperuser: json['is_superuser'] as bool?,
+      isGuest: json['is_guest'] as int?,
+      isSuperuser: json['is_superuser'] as int?,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{

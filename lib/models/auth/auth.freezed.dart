@@ -211,8 +211,8 @@ class _$UserTearOff {
       @JsonKey(name: 'updated_at') required DateTime updatedAt,
       @JsonKey(name: 'deleted_at') required DateTime? deletedAt,
       @JsonKey(name: 'is_activated') required bool isActivated,
-      @JsonKey(name: 'is_guest') required bool? isGuest,
-      @JsonKey(name: 'is_superuser') required bool? isSuperuser}) {
+      @JsonKey(name: 'is_guest') required int? isGuest,
+      @JsonKey(name: 'is_superuser') required int? isSuperuser}) {
     return _User(
       id: id,
       name: name,
@@ -265,9 +265,9 @@ mixin _$User {
   @JsonKey(name: 'is_activated')
   bool get isActivated => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_guest')
-  bool? get isGuest => throw _privateConstructorUsedError;
+  int? get isGuest => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_superuser')
-  bool? get isSuperuser => throw _privateConstructorUsedError;
+  int? get isSuperuser => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -293,8 +293,8 @@ abstract class $UserCopyWith<$Res> {
       @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(name: 'is_activated') bool isActivated,
-      @JsonKey(name: 'is_guest') bool? isGuest,
-      @JsonKey(name: 'is_superuser') bool? isSuperuser});
+      @JsonKey(name: 'is_guest') int? isGuest,
+      @JsonKey(name: 'is_superuser') int? isSuperuser});
 }
 
 /// @nodoc
@@ -384,11 +384,11 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
       isGuest: isGuest == freezed
           ? _value.isGuest
           : isGuest // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as int?,
       isSuperuser: isSuperuser == freezed
           ? _value.isSuperuser
           : isSuperuser // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as int?,
     ));
   }
 }
@@ -413,8 +413,8 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       @JsonKey(name: 'updated_at') DateTime updatedAt,
       @JsonKey(name: 'deleted_at') DateTime? deletedAt,
       @JsonKey(name: 'is_activated') bool isActivated,
-      @JsonKey(name: 'is_guest') bool? isGuest,
-      @JsonKey(name: 'is_superuser') bool? isSuperuser});
+      @JsonKey(name: 'is_guest') int? isGuest,
+      @JsonKey(name: 'is_superuser') int? isSuperuser});
 }
 
 /// @nodoc
@@ -505,11 +505,11 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
       isGuest: isGuest == freezed
           ? _value.isGuest
           : isGuest // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as int?,
       isSuperuser: isSuperuser == freezed
           ? _value.isSuperuser
           : isSuperuser // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as int?,
     ));
   }
 }
@@ -574,10 +574,10 @@ class _$_User implements _User {
   final bool isActivated;
   @override
   @JsonKey(name: 'is_guest')
-  final bool? isGuest;
+  final int? isGuest;
   @override
   @JsonKey(name: 'is_superuser')
-  final bool? isSuperuser;
+  final int? isSuperuser;
 
   @override
   String toString() {
@@ -658,8 +658,8 @@ abstract class _User implements User {
       @JsonKey(name: 'updated_at') required DateTime updatedAt,
       @JsonKey(name: 'deleted_at') required DateTime? deletedAt,
       @JsonKey(name: 'is_activated') required bool isActivated,
-      @JsonKey(name: 'is_guest') required bool? isGuest,
-      @JsonKey(name: 'is_superuser') required bool? isSuperuser}) = _$_User;
+      @JsonKey(name: 'is_guest') required int? isGuest,
+      @JsonKey(name: 'is_superuser') required int? isSuperuser}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -700,10 +700,10 @@ abstract class _User implements User {
   bool get isActivated;
   @override
   @JsonKey(name: 'is_guest')
-  bool? get isGuest;
+  int? get isGuest;
   @override
   @JsonKey(name: 'is_superuser')
-  bool? get isSuperuser;
+  int? get isSuperuser;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;

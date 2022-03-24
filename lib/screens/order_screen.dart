@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:rezervujme_app/extensions/string.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
@@ -31,16 +33,24 @@ class _OrderScreenState extends State<OrderScreen> {
   TimeOfDay? _reservationTime;
   int? _selectedTable;
 
+  Future<void> getAvailableTimes() async {
+    var data = await Dio().get(
+        '${dotenv.get('APP_URL')}/public/api/v1/restaurants/${_restaurant.id}/timeperiods',
+        queryParameters: {'date': _reservationDate.toIso8601String()});
+    print(data.data);
+  }
+
   @override
   void initState() {
     _reservationDate = DateTime.parse(widget.reservationDateString);
     _restaurant =
         context.read<RestaurantsCubit>().getRestaurantById(widget.restaurantId);
-    print('loaded');
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _controller.value =
           Matrix4.identity() * (MediaQuery.of(context).size.width / 772);
     });
+
+    getAvailableTimes();
     super.initState();
   }
 
