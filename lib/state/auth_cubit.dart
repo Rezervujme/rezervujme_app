@@ -19,6 +19,7 @@ class AuthCubit extends Cubit<Auth> {
     if (token == null || user == null) return;
     var newState = Auth(token: token, user: User.fromJson(jsonDecode(user)));
     emit(newState);
+    print(newState.token);
   }
 
   Future<void> requestCode(

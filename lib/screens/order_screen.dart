@@ -30,14 +30,31 @@ class _OrderScreenState extends State<OrderScreen> {
 
   late Restaurant _restaurant;
   late DateTime _reservationDate;
+  late List<dynamic> _availableTimes;
+  List<dynamic>? _tableView;
   TimeOfDay? _reservationTime;
-  int? _selectedTable;
+  dynamic? _selectedTable;
+  String note = '';
 
   Future<void> getAvailableTimes() async {
     var data = await Dio().get(
         '${dotenv.get('APP_URL')}/public/api/v1/restaurants/${_restaurant.id}/timeperiods',
         queryParameters: {'date': _reservationDate.toIso8601String()});
-    print(data.data);
+    setState(() {
+      _availableTimes = data.data['data'];
+    });
+  }
+
+  Future<void> getTableView() async {
+    var data = await Dio().get(
+        '${dotenv.get('APP_URL')}/public/api/v1/restaurants/${_restaurant.id}/tableviews',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${context.read<AuthCubit>().state.token}'
+        }));
+    setState(() {
+      _tableView = data.data['data'];
+      print(_tableView);
+    });
   }
 
   @override
@@ -49,7 +66,7 @@ class _OrderScreenState extends State<OrderScreen> {
       _controller.value =
           Matrix4.identity() * (MediaQuery.of(context).size.width / 772);
     });
-
+    getTableView();
     getAvailableTimes();
     super.initState();
   }
@@ -109,61 +126,31 @@ class _OrderScreenState extends State<OrderScreen> {
                           height: 768,
                           child: Stack(
                             children: [
-                              Positioned(
-                                top: 32,
-                                left: 32,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    setState(() {
-                                      _selectedTable = 1;
-                                    });
-                                  },
-                                  child: OrderTable(
-                                    tableState: _selectedTable == 1
-                                        ? TableState.selected
-                                        : TableState.available,
-                                    tableType: TableType.square,
+                              if (_tableView != null)
+                                ..._tableView!.last['tables'].map(
+                                  (table) => Positioned(
+                                    left: table['position']['x'].toDouble(),
+                                    top: table['position']['y'].toDouble(),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        setState(() {
+                                          _selectedTable = table;
+                                        });
+                                      },
+                                      child: OrderTable(
+                                        tableState: table['uuid'] ==
+                                                _selectedTable?['uuid']
+                                            ? TableState.selected
+                                            : TableState.available,
+                                        tableType: table['shape'] == 'square'
+                                            ? TableType.square
+                                            : TableType.circle,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 128,
-                                left: 128,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    setState(() {
-                                      _selectedTable = 2;
-                                    });
-                                  },
-                                  child: OrderTable(
-                                    tableState: _selectedTable == 2
-                                        ? TableState.selected
-                                        : TableState.available,
-                                    tableType: TableType.square,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 512,
-                                left: 64,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                    setState(() {
-                                      _selectedTable = 2;
-                                    });
-                                  },
-                                  child: OrderTable(
-                                    tableState: TableState.reserved,
-                                    tableType: TableType.square,
-                                  ),
-                                ),
-                              ),
+                                )
                             ],
                           ),
                         ),
@@ -184,7 +171,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           label: _restaurant.name, icon: Icons.house_outlined),
                       OrderItem(
                           label: _selectedTable != null
-                              ? 'Stôl $_selectedTable - pre 4 osoby'
+                              ? 'Stôl ${_selectedTable['label']} - pre 4 osoby'
                               : 'Vyberte stôl',
                           icon: Icons.table_chart_outlined),
                       OrderItem(
@@ -223,6 +210,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               minLines: 2,
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
+                              onChanged: (value) => note = value,
                               style: const TextStyle(fontSize: 13),
                               cursorColor: Theme.of(context).primaryColor,
                               decoration: InputDecoration(
