@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rezervujme_app/extensions/string.dart';
 import 'package:rezervujme_app/models/restaurant/restaurant.dart';
 import 'package:rezervujme_app/state/auth_cubit.dart';
@@ -33,16 +34,21 @@ class _OrderScreenState extends State<OrderScreen> {
   late List<dynamic> _availableTimes;
   List<dynamic>? _tableView;
   TimeOfDay? _reservationTime;
-  dynamic? _selectedTable;
+  dynamic _selectedTable;
   String note = '';
 
-  Future<void> getAvailableTimes() async {
+  Future<void> fetchAvailableTimes() async {
     var data = await Dio().get(
         '${dotenv.get('APP_URL')}/public/api/v1/restaurants/${_restaurant.id}/timeperiods',
         queryParameters: {'date': _reservationDate.toIso8601String()});
     setState(() {
       _availableTimes = data.data['data'];
+      print(_availableTimes);
     });
+  }
+
+  DateTime join(DateTime date, TimeOfDay time) {
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 
   Future<void> getTableView() async {
@@ -57,6 +63,56 @@ class _OrderScreenState extends State<OrderScreen> {
     });
   }
 
+  List<dynamic> getTimes() {
+    return _availableTimes.firstWhere((element) =>
+        element.keys.elementAt(0) ==
+        _selectedTable['uuid'])[_selectedTable['uuid']];
+  }
+
+  Future<void> orderTable() async {
+    try {
+      print({
+        'table_id': _selectedTable['uuid'],
+        'from': join(_reservationDate, _reservationTime!).toIso8601String(),
+        'to': join(_reservationDate, _reservationTime!)
+            .add(Duration(hours: 2))
+            .toIso8601String(),
+        'note': note
+      });
+      await Dio().post('${dotenv.get('APP_URL')}/api/v1/reservations',
+          data: {
+            'table_id': _selectedTable['uuid'],
+            'from': join(_reservationDate, _reservationTime!).toIso8601String(),
+            'to': join(_reservationDate, _reservationTime!)
+                .add(Duration(hours: 2))
+                .toIso8601String(),
+            'note': note
+          },
+          options: Options(headers: {
+            'Authorization': 'Bearer ${context.read<AuthCubit>().state.token}'
+          }));
+      context.vRouter.to('/order-success');
+      _selectedTable = null;
+      _reservationTime = null;
+    } catch (err) {
+      if (err is DioError) {
+        if (err.response?.data['error'] != null) {
+          var snackBar = SnackBar(
+            content: Text(err.response?.data['error']),
+            duration: const Duration(seconds: 1),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else {
+          var snackBar = const SnackBar(
+            content: Text('An unknown error has occurred.'),
+            duration: Duration(seconds: 1),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     _reservationDate = DateTime.parse(widget.reservationDateString);
@@ -67,7 +123,7 @@ class _OrderScreenState extends State<OrderScreen> {
           Matrix4.identity() * (MediaQuery.of(context).size.width / 772);
     });
     getTableView();
-    getAvailableTimes();
+    fetchAvailableTimes();
     super.initState();
   }
 
@@ -114,6 +170,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         FocusManager.instance.primaryFocus?.unfocus();
                         setState(() {
                           _selectedTable = null;
+                          _reservationTime = null;
                         });
                       },
                       child: InteractiveViewer(
@@ -137,6 +194,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                             ?.unfocus();
                                         setState(() {
                                           _selectedTable = table;
+                                          _reservationTime = null;
                                         });
                                       },
                                       child: OrderTable(
@@ -173,7 +231,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           label: _selectedTable != null
                               ? 'Stôl ${_selectedTable['label']} - pre 4 osoby'
                               : 'Vyberte stôl',
-                          icon: Icons.table_chart_outlined),
+                          icon: Icons.location_on_outlined),
                       OrderItem(
                           label:
                               '${context.read<AuthCubit>().state.user!.name} ${context.read<AuthCubit>().state.user!.surname}',
@@ -183,21 +241,61 @@ class _OrderScreenState extends State<OrderScreen> {
                             '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
                         icon: Icons.calendar_today_outlined,
                       ),
-                      OrderItem(
-                        label: _reservationTime?.format(context) ??
-                            'Vyberte čas rezervácie',
-                        icon: Icons.access_time_outlined,
-                        openTime: true,
-                        callback: () async {
-                          var time = await showTimePicker(
-                              context: context, initialTime: TimeOfDay.now());
-                          if (time != null) {
-                            setState(() {
-                              _reservationTime = time;
-                            });
-                          }
-                        },
-                      ),
+                      if (_selectedTable != null)
+                        OrderItem(
+                          label: _reservationTime?.format(context) ??
+                              'Vyberte čas rezervácie',
+                          icon: Icons.access_time_outlined,
+                          openTime: true,
+                          callback: () async {
+                            if (_selectedTable == null) return;
+                            showMaterialModalBottomSheet(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                      appBar: AppBar(
+                                        systemOverlayStyle:
+                                            SystemUiOverlayStyle.dark,
+                                        foregroundColor: Colors.black,
+                                        title: Text('Vyberte čas rezervácie'),
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                        leading: Text(''),
+                                        actions: [
+                                          IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(Icons.close_outlined))
+                                        ],
+                                      ),
+                                      body: ListView.separated(
+                                          itemCount: getTimes().length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              title: Text(
+                                                  TimeOfDay.fromDateTime(
+                                                          DateTime.parse(
+                                                              getTimes()[
+                                                                  index]))
+                                                      .format(context)),
+                                              onTap: () {
+                                                setState(() {
+                                                  _reservationTime =
+                                                      TimeOfDay.fromDateTime(
+                                                          DateTime.parse(
+                                                              getTimes()[
+                                                                  index]));
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          },
+                                          separatorBuilder: (context, index) {
+                                            return Divider();
+                                          }),
+                                    ));
+                          },
+                        ),
                       Container(
                         margin: EdgeInsets.only(left: 16, right: 16, top: 16),
                         child: Column(
@@ -238,7 +336,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       onPressed:
                           _reservationTime == null || _selectedTable == null
                               ? null
-                              : () => context.vRouter.to('/order-success'),
+                              : orderTable,
                       child: Text('Záväzne objednať')),
                 ),
               ],

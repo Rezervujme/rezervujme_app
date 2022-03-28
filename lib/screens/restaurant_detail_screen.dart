@@ -60,41 +60,6 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             ),
           ),
         ),
-        actions: [
-          Container(
-            margin: EdgeInsets.all(8),
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(64),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      blurRadius: 4,
-                      offset: const Offset(1, 3))
-                ]),
-            child: PopupMenuButton(
-              icon: Icon(
-                Icons.more_vert_outlined,
-                color: Theme.of(context).primaryColor,
-              ),
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  child: Text('Nothing here. Yet'),
-                )
-              ],
-            ),
-            // IconButton(
-            //   splashRadius: 22,
-            //   onPressed: () => {},
-            //   icon: Icon(
-            //     Icons.more_vert_outlined,
-            //     color: Theme.of(context).primaryColor,
-            //   ),
-            // ),
-          ),
-        ],
       ),
       body: SafeArea(
         top: false,
@@ -116,7 +81,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                               width: double.infinity,
                               height: 256,
                               child: CachedNetworkImage(
-                                imageUrl: 'https://via.placeholder.com/150',
+                                imageUrl:
+                                    'https://zellersrestaurants.com/wp-content/uploads/2019/11/Restaurant.jpg',
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -149,33 +115,13 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Text(_restaurant.name),
+                                  Text(
+                                    _restaurant.name,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
                                   Text(_restaurant.address),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.location_on_outlined,
-                                            size: 16,
-                                          ),
-                                          Text('1km'),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.emoji_emotions_outlined,
-                                            size: 16,
-                                          ),
-                                          Text('4.7'),
-                                        ],
-                                      ),
-                                      Text('€€€'),
-                                    ],
-                                  )
                                 ],
                               ),
                             ),
@@ -183,41 +129,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                         ],
                       ),
                     ),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
-                    Text('test'),
+                    Padding(
+                      child: Text(_restaurant.description),
+                      padding: EdgeInsets.all(16),
+                    )
                   ],
                 ),
               ),

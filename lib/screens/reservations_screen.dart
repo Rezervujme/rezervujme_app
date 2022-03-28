@@ -9,6 +9,7 @@ class ReservationsScreen extends StatefulWidget {
 
 class _ReservationsScreenState extends State<ReservationsScreen> {
   List<String> notifications = List.filled(4, 'Rezervácia', growable: true);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

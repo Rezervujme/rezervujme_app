@@ -177,7 +177,8 @@ class RestaurantCard extends StatelessWidget {
                               child: CircularProgressIndicator.adaptive()),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
-                          imageUrl: 'https://via.placeholder.com/150'),
+                          imageUrl:
+                              'https://zellersrestaurants.com/wp-content/uploads/2019/11/Restaurant.jpg'),
                     ),
                   ),
                   Container(
