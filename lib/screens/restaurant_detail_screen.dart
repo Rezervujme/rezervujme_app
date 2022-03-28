@@ -130,7 +130,23 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       ),
                     ),
                     Padding(
-                      child: Text(_restaurant.description),
+                      child: Column(
+                        children: [
+                          Text(_restaurant.description),
+                          Padding(
+                            padding: EdgeInsets.only(top: 12, bottom: 6),
+                            child: Align(
+                              child: Text(
+                                'Otváracie hodiny',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ),
+                          Text(_restaurant.openingHours)
+                        ],
+                      ),
                       padding: EdgeInsets.all(16),
                     )
                   ],

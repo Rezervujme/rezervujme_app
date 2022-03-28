@@ -22,6 +22,14 @@ class AuthCubit extends Cubit<Auth> {
     print(newState.token);
   }
 
+  Future<void> updateUser() async {
+    var data = await Dio().get('${dotenv.get('APP_URL')}/api/v1/auth/info',
+        options: Options(headers: {'Authorization': 'Bearer ${state.token}'}));
+    var newState = Auth(
+        token: state.token, user: User.fromJson(data.data['data']['user']));
+    emit(newState);
+  }
+
   Future<void> requestCode(
       BuildContext context, PhoneNumber phoneNumber) async {
     try {

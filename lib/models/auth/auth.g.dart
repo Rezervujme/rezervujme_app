@@ -26,6 +26,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       email: json['email'] as String,
       avatar: json['avatar'],
       permissions: json['permissions'],
+      reservations: json['reservations'] as List<dynamic>?,
       lastLogin: json['last_login'] == null
           ? null
           : DateTime.parse(json['last_login'] as String),
@@ -51,6 +52,7 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'email': instance.email,
       'avatar': instance.avatar,
       'permissions': instance.permissions,
+      'reservations': instance.reservations,
       'last_login': instance.lastLogin?.toIso8601String(),
       'last_seen': instance.lastSeen?.toIso8601String(),
       'activated_at': instance.activatedAt.toIso8601String(),

@@ -204,6 +204,7 @@ class _$UserTearOff {
       required String email,
       required dynamic avatar,
       required dynamic permissions,
+      required List<dynamic>? reservations,
       @JsonKey(name: 'last_login') required DateTime? lastLogin,
       @JsonKey(name: 'last_seen') required DateTime? lastSeen,
       @JsonKey(name: 'activated_at') required DateTime activatedAt,
@@ -221,6 +222,7 @@ class _$UserTearOff {
       email: email,
       avatar: avatar,
       permissions: permissions,
+      reservations: reservations,
       lastLogin: lastLogin,
       lastSeen: lastSeen,
       activatedAt: activatedAt,
@@ -250,6 +252,7 @@ mixin _$User {
   String get email => throw _privateConstructorUsedError;
   dynamic get avatar => throw _privateConstructorUsedError;
   dynamic get permissions => throw _privateConstructorUsedError;
+  List<dynamic>? get reservations => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_login')
   DateTime? get lastLogin => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_seen')
@@ -286,6 +289,7 @@ abstract class $UserCopyWith<$Res> {
       String email,
       dynamic avatar,
       dynamic permissions,
+      List<dynamic>? reservations,
       @JsonKey(name: 'last_login') DateTime? lastLogin,
       @JsonKey(name: 'last_seen') DateTime? lastSeen,
       @JsonKey(name: 'activated_at') DateTime activatedAt,
@@ -314,6 +318,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? email = freezed,
     Object? avatar = freezed,
     Object? permissions = freezed,
+    Object? reservations = freezed,
     Object? lastLogin = freezed,
     Object? lastSeen = freezed,
     Object? activatedAt = freezed,
@@ -353,6 +358,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.permissions
           : permissions // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      reservations: reservations == freezed
+          ? _value.reservations
+          : reservations // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
       lastLogin: lastLogin == freezed
           ? _value.lastLogin
           : lastLogin // ignore: cast_nullable_to_non_nullable
@@ -406,6 +415,7 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String email,
       dynamic avatar,
       dynamic permissions,
+      List<dynamic>? reservations,
       @JsonKey(name: 'last_login') DateTime? lastLogin,
       @JsonKey(name: 'last_seen') DateTime? lastSeen,
       @JsonKey(name: 'activated_at') DateTime activatedAt,
@@ -435,6 +445,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? email = freezed,
     Object? avatar = freezed,
     Object? permissions = freezed,
+    Object? reservations = freezed,
     Object? lastLogin = freezed,
     Object? lastSeen = freezed,
     Object? activatedAt = freezed,
@@ -474,6 +485,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.permissions
           : permissions // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      reservations: reservations == freezed
+          ? _value.reservations
+          : reservations // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
       lastLogin: lastLogin == freezed
           ? _value.lastLogin
           : lastLogin // ignore: cast_nullable_to_non_nullable
@@ -525,6 +540,7 @@ class _$_User implements _User {
       required this.email,
       required this.avatar,
       required this.permissions,
+      required this.reservations,
       @JsonKey(name: 'last_login') required this.lastLogin,
       @JsonKey(name: 'last_seen') required this.lastSeen,
       @JsonKey(name: 'activated_at') required this.activatedAt,
@@ -551,6 +567,8 @@ class _$_User implements _User {
   final dynamic avatar;
   @override
   final dynamic permissions;
+  @override
+  final List<dynamic>? reservations;
   @override
   @JsonKey(name: 'last_login')
   final DateTime? lastLogin;
@@ -581,7 +599,7 @@ class _$_User implements _User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, surname: $surname, username: $username, email: $email, avatar: $avatar, permissions: $permissions, lastLogin: $lastLogin, lastSeen: $lastSeen, activatedAt: $activatedAt, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isActivated: $isActivated, isGuest: $isGuest, isSuperuser: $isSuperuser)';
+    return 'User(id: $id, name: $name, surname: $surname, username: $username, email: $email, avatar: $avatar, permissions: $permissions, reservations: $reservations, lastLogin: $lastLogin, lastSeen: $lastSeen, activatedAt: $activatedAt, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt, isActivated: $isActivated, isGuest: $isGuest, isSuperuser: $isSuperuser)';
   }
 
   @override
@@ -597,6 +615,8 @@ class _$_User implements _User {
             const DeepCollectionEquality().equals(other.avatar, avatar) &&
             const DeepCollectionEquality()
                 .equals(other.permissions, permissions) &&
+            const DeepCollectionEquality()
+                .equals(other.reservations, reservations) &&
             const DeepCollectionEquality().equals(other.lastLogin, lastLogin) &&
             const DeepCollectionEquality().equals(other.lastSeen, lastSeen) &&
             const DeepCollectionEquality()
@@ -621,6 +641,7 @@ class _$_User implements _User {
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(avatar),
       const DeepCollectionEquality().hash(permissions),
+      const DeepCollectionEquality().hash(reservations),
       const DeepCollectionEquality().hash(lastLogin),
       const DeepCollectionEquality().hash(lastSeen),
       const DeepCollectionEquality().hash(activatedAt),
@@ -651,6 +672,7 @@ abstract class _User implements User {
       required String email,
       required dynamic avatar,
       required dynamic permissions,
+      required List<dynamic>? reservations,
       @JsonKey(name: 'last_login') required DateTime? lastLogin,
       @JsonKey(name: 'last_seen') required DateTime? lastSeen,
       @JsonKey(name: 'activated_at') required DateTime activatedAt,
@@ -677,6 +699,8 @@ abstract class _User implements User {
   dynamic get avatar;
   @override
   dynamic get permissions;
+  @override
+  List<dynamic>? get reservations;
   @override
   @JsonKey(name: 'last_login')
   DateTime? get lastLogin;

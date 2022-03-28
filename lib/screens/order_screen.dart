@@ -48,7 +48,8 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   DateTime join(DateTime date, TimeOfDay time) {
-    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    return DateTime.utc(
+        date.year, date.month, date.day, time.hour, time.minute);
   }
 
   Future<void> getTableView() async {
@@ -71,14 +72,6 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> orderTable() async {
     try {
-      print({
-        'table_id': _selectedTable['uuid'],
-        'from': join(_reservationDate, _reservationTime!).toIso8601String(),
-        'to': join(_reservationDate, _reservationTime!)
-            .add(Duration(hours: 2))
-            .toIso8601String(),
-        'note': note
-      });
       await Dio().post('${dotenv.get('APP_URL')}/api/v1/reservations',
           data: {
             'table_id': _selectedTable['uuid'],
@@ -184,31 +177,38 @@ class _OrderScreenState extends State<OrderScreen> {
                           child: Stack(
                             children: [
                               if (_tableView != null)
-                                ..._tableView!.last['tables'].map(
-                                  (table) => Positioned(
-                                    left: table['position']['x'].toDouble(),
-                                    top: table['position']['y'].toDouble(),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                        setState(() {
-                                          _selectedTable = table;
-                                          _reservationTime = null;
-                                        });
-                                      },
-                                      child: OrderTable(
-                                        tableState: table['uuid'] ==
-                                                _selectedTable?['uuid']
-                                            ? TableState.selected
-                                            : TableState.available,
-                                        tableType: table['shape'] == 'square'
-                                            ? TableType.square
-                                            : TableType.circle,
+                                ..._tableView!
+                                    .firstWhere((element) =>
+                                        _restaurant.primaryTableView != null
+                                            ? element['id'] ==
+                                                _restaurant.primaryTableView
+                                            : true)['tables']
+                                    .map(
+                                      (table) => Positioned(
+                                        left: table['position']['x'].toDouble(),
+                                        top: table['position']['y'].toDouble(),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            setState(() {
+                                              _selectedTable = table;
+                                              _reservationTime = null;
+                                            });
+                                          },
+                                          child: OrderTable(
+                                            tableState: table['uuid'] ==
+                                                    _selectedTable?['uuid']
+                                                ? TableState.selected
+                                                : TableState.available,
+                                            tableType:
+                                                table['shape'] == 'square'
+                                                    ? TableType.square
+                                                    : TableType.circle,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )
+                                    )
                             ],
                           ),
                         ),

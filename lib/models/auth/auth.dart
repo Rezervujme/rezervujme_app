@@ -20,6 +20,7 @@ class User with _$User {
     required String email,
     required dynamic avatar,
     required dynamic permissions,
+    required List<dynamic>? reservations,
     @JsonKey(name: 'last_login') required DateTime? lastLogin,
     @JsonKey(name: 'last_seen') required DateTime? lastSeen,
     @JsonKey(name: 'activated_at') required DateTime activatedAt,

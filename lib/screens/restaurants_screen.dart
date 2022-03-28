@@ -30,12 +30,6 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
     super.initState();
   }
 
-//   List<Restaurant> searchRestaurants(String search) {
-//     return state
-//         .where((restaurant) => restaurant.name.startsWith(search))
-//         .toList();
-//   }
-// }
   List<Restaurant>? searchedRestaurants;
 
   @override
@@ -60,12 +54,15 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                         child: CupertinoSearchTextField(
                             placeholder: 'Hľadať reštauráciu...',
                             onChanged: (val) {
-                              setState(() => searchedRestaurants = context
-                                  .read<RestaurantsCubit>()
-                                  .state
-                                  .where(
-                                      (element) => element.name.startsWith(val))
-                                  .toList());
+                              setState(() {
+                                searchedRestaurants = context
+                                    .read<RestaurantsCubit>()
+                                    .state
+                                    .where((element) =>
+                                        element.name.startsWith(val))
+                                    .toList();
+                                print(searchedRestaurants);
+                              });
                             },
                             borderRadius: BorderRadius.circular(100)),
                       ),
@@ -128,7 +125,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                       ],
                                     );
                                   }
-                                  final restaurant = state[index - 1];
+                                  final restaurant =
+                                      searchedRestaurants![index - 1];
                                   return RestaurantCard(restaurant: restaurant);
                                 }),
                           ),

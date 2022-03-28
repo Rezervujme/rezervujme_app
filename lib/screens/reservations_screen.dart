@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:rezervujme_app/state/auth_cubit.dart';
 
 class ReservationsScreen extends StatefulWidget {
   const ReservationsScreen({Key? key}) : super(key: key);
@@ -8,7 +11,18 @@ class ReservationsScreen extends StatefulWidget {
 }
 
 class _ReservationsScreenState extends State<ReservationsScreen> {
-  List<String> notifications = List.filled(4, 'Rezervácia', growable: true);
+  List<dynamic> reservations = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<AuthCubit>().updateUser().then((value) {
+      setState(() {
+        reservations = context.read<AuthCubit>().state.user?.reservations ?? [];
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +37,22 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
         foregroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView.separated(
-        itemCount: notifications.length,
+        itemCount: reservations.length,
         separatorBuilder: (context, index) {
           return const Divider();
         },
         itemBuilder: (context, index) {
-          print(notifications);
+          print(reservations);
           return ListTile(
-            title: Text(notifications[index]),
-            subtitle: Text('12. marec 2022, 13:30'),
+            title: Text(reservations[index]['restaurant']['name']),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    '${DateFormat.Md('sk').format(DateTime.parse(reservations[index]['from']))} ${DateTime.parse(reservations[index]['from']).hour}:${DateTime.parse(reservations[index]['from']).minute}'),
+                Text(reservations[index]['note']),
+              ],
+            ),
           );
         },
       ),
