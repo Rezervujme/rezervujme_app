@@ -18,7 +18,7 @@ class Restaurant with _$Restaurant {
           required double reservationAdvanceHours,
       required String type,
       @JsonKey(name: 'primary_table_view')
-          required String? primaryTableView}) = _Restaurant;
+          required dynamic primaryTableView}) = _Restaurant;
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);

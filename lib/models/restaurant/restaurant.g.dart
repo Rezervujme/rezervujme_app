@@ -17,7 +17,7 @@ _$_Restaurant _$$_RestaurantFromJson(Map<String, dynamic> json) =>
       reservationAdvanceHours:
           (json['reservation_advance_hours'] as num).toDouble(),
       type: json['type'] as String,
-      primaryTableView: json['primary_table_view'] as String?,
+      primaryTableView: json['primary_table_view'],
     );
 
 Map<String, dynamic> _$$_RestaurantToJson(_$_Restaurant instance) =>

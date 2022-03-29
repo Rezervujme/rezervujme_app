@@ -45,12 +45,19 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           print(reservations);
           return ListTile(
             title: Text(reservations[index]['restaurant']['name']),
-            subtitle: Column(
+            subtitle: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                    '${DateFormat.Md('sk').format(DateTime.parse(reservations[index]['from']))} ${DateTime.parse(reservations[index]['from']).hour}:${DateTime.parse(reservations[index]['from']).minute}'),
-                Text(reservations[index]['note']),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        '${DateFormat.Md('sk').format(DateTime.parse(reservations[index]['from']))} ${DateTime.parse(reservations[index]['from']).hour}:${DateTime.parse(reservations[index]['from']).minute}'),
+                    Text(reservations[index]['note']),
+                  ],
+                ),
+                Text('Stôl: ${reservations[index]['restaurantTable']['label']}')
               ],
             ),
           );

@@ -35,7 +35,7 @@ class _$RestaurantTearOff {
           required double reservationAdvanceHours,
       required String type,
       @JsonKey(name: 'primary_table_view')
-          required String? primaryTableView}) {
+          required dynamic primaryTableView}) {
     return _Restaurant(
       id: id,
       name: name,
@@ -71,7 +71,7 @@ mixin _$Restaurant {
   double get reservationAdvanceHours => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   @JsonKey(name: 'primary_table_view')
-  String? get primaryTableView => throw _privateConstructorUsedError;
+  dynamic get primaryTableView => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -97,7 +97,7 @@ abstract class $RestaurantCopyWith<$Res> {
           double reservationAdvanceHours,
       String type,
       @JsonKey(name: 'primary_table_view')
-          String? primaryTableView});
+          dynamic primaryTableView});
 }
 
 /// @nodoc
@@ -156,7 +156,7 @@ class _$RestaurantCopyWithImpl<$Res> implements $RestaurantCopyWith<$Res> {
       primaryTableView: primaryTableView == freezed
           ? _value.primaryTableView
           : primaryTableView // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
     ));
   }
 }
@@ -180,7 +180,7 @@ abstract class _$RestaurantCopyWith<$Res> implements $RestaurantCopyWith<$Res> {
           double reservationAdvanceHours,
       String type,
       @JsonKey(name: 'primary_table_view')
-          String? primaryTableView});
+          dynamic primaryTableView});
 }
 
 /// @nodoc
@@ -241,7 +241,7 @@ class __$RestaurantCopyWithImpl<$Res> extends _$RestaurantCopyWithImpl<$Res>
       primaryTableView: primaryTableView == freezed
           ? _value.primaryTableView
           : primaryTableView // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
     ));
   }
 }
@@ -288,7 +288,7 @@ class _$_Restaurant implements _Restaurant {
   final String type;
   @override
   @JsonKey(name: 'primary_table_view')
-  final String? primaryTableView;
+  final dynamic primaryTableView;
 
   @override
   String toString() {
@@ -354,7 +354,7 @@ abstract class _Restaurant implements Restaurant {
           required double reservationAdvanceHours,
       required String type,
       @JsonKey(name: 'primary_table_view')
-          required String? primaryTableView}) = _$_Restaurant;
+          required dynamic primaryTableView}) = _$_Restaurant;
 
   factory _Restaurant.fromJson(Map<String, dynamic> json) =
       _$_Restaurant.fromJson;
@@ -380,7 +380,7 @@ abstract class _Restaurant implements Restaurant {
   String get type;
   @override
   @JsonKey(name: 'primary_table_view')
-  String? get primaryTableView;
+  dynamic get primaryTableView;
   @override
   @JsonKey(ignore: true)
   _$RestaurantCopyWith<_Restaurant> get copyWith =>

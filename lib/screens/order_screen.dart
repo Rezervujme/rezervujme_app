@@ -181,7 +181,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                     .firstWhere((element) =>
                                         _restaurant.primaryTableView != null
                                             ? element['id'] ==
-                                                _restaurant.primaryTableView
+                                                _restaurant
+                                                    .primaryTableView['id']
                                             : true)['tables']
                                     .map(
                                       (table) => Positioned(
