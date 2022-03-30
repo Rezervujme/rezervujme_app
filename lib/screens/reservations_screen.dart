@@ -37,35 +37,40 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         foregroundColor: Theme.of(context).primaryColor,
       ),
-      body: ListView.separated(
-        itemCount: reservations.length,
-        separatorBuilder: (context, index) {
-          return const Divider();
-        },
-        itemBuilder: (context, index) {
-          if (kDebugMode) {
-            print(reservations);
-          }
-          return ListTile(
-            title: Text(reservations[index]['restaurant']['name']),
-            subtitle: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        '${DateFormat.Md('sk').format(DateTime.parse(reservations[index]['from']))} ${DateTime.parse(reservations[index]['from']).hour}:${DateTime.parse(reservations[index]['from']).minute}'),
-                    Text(reservations[index]['note']),
-                  ],
-                ),
-                Text('Stôl: ${reservations[index]['restaurantTable']['label']}')
-              ],
+      body: reservations.isEmpty
+          ? const Center(
+              child: Text('Nemáte zatiaľ žiadne rezervácie.'),
+            )
+          : ListView.separated(
+              itemCount: reservations.length,
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemBuilder: (context, index) {
+                if (kDebugMode) {
+                  print(reservations);
+                }
+                return ListTile(
+                  title: Text(reservations[index]['restaurant']['name']),
+                  subtitle: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              '${DateFormat.Md('sk').format(DateTime.parse(reservations[index]['from']))} ${DateTime.parse(reservations[index]['from']).hour}:${DateTime.parse(reservations[index]['from']).minute}'),
+                          Text(reservations[index]['note']),
+                        ],
+                      ),
+                      Text(
+                          'Stôl: ${reservations[index]['restaurantTable']['label']}')
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
