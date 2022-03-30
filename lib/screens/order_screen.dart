@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +44,9 @@ class _OrderScreenState extends State<OrderScreen> {
         queryParameters: {'date': _reservationDate.toIso8601String()});
     setState(() {
       _availableTimes = data.data['data'];
-      print(_availableTimes);
+      if (kDebugMode) {
+        print(_availableTimes);
+      }
     });
   }
 
@@ -60,7 +63,9 @@ class _OrderScreenState extends State<OrderScreen> {
         }));
     setState(() {
       _tableView = data.data['data'];
-      print(_tableView);
+      if (kDebugMode) {
+        print(_tableView);
+      }
     });
   }
 
@@ -77,7 +82,7 @@ class _OrderScreenState extends State<OrderScreen> {
             'table_id': _selectedTable['uuid'],
             'from': join(_reservationDate, _reservationTime!).toIso8601String(),
             'to': join(_reservationDate, _reservationTime!)
-                .add(Duration(hours: 2))
+                .add(const Duration(hours: 2))
                 .toIso8601String(),
             'note': note
           },
@@ -149,10 +154,10 @@ class _OrderScreenState extends State<OrderScreen> {
               children: [
                 Container(
                   width: double.infinity,
-                  margin: EdgeInsets.all(16),
+                  margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(8),
                       ),
                       border: Border.all(color: Colors.grey)),
@@ -217,119 +222,115 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                   ),
                 ),
-                Container(
-                  child: Text(
-                    'Detaily objednávky',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
+                Text(
+                  'Detaily objednávky',
+                  style: Theme.of(context).textTheme.headline6,
                 ),
-                Container(
-                  child: Column(
-                    children: [
-                      OrderItem(
-                          label: _restaurant.name, icon: Icons.house_outlined),
-                      OrderItem(
-                          label: _selectedTable != null
-                              ? 'Stôl ${_selectedTable['label']} - pre 4 osoby'
-                              : 'Vyberte stôl',
-                          icon: Icons.location_on_outlined),
-                      OrderItem(
-                          label:
-                              '${context.read<AuthCubit>().state.user!.name} ${context.read<AuthCubit>().state.user!.surname}',
-                          icon: Icons.person_outlined),
-                      OrderItem(
+                Column(
+                  children: [
+                    OrderItem(
+                        label: _restaurant.name, icon: Icons.house_outlined),
+                    OrderItem(
+                        label: _selectedTable != null
+                            ? 'Stôl ${_selectedTable['label']} - pre 4 osoby'
+                            : 'Vyberte stôl',
+                        icon: Icons.location_on_outlined),
+                    OrderItem(
                         label:
-                            '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
-                        icon: Icons.calendar_today_outlined,
+                            '${context.read<AuthCubit>().state.user!.name} ${context.read<AuthCubit>().state.user!.surname}',
+                        icon: Icons.person_outlined),
+                    OrderItem(
+                      label:
+                          '${DateFormat.EEEE('sk').format(_reservationDate).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate)}',
+                      icon: Icons.calendar_today_outlined,
+                    ),
+                    if (_selectedTable != null)
+                      OrderItem(
+                        label: _reservationTime?.format(context) ??
+                            'Vyberte čas rezervácie',
+                        icon: Icons.access_time_outlined,
+                        openTime: true,
+                        callback: () async {
+                          if (_selectedTable == null) return;
+                          showMaterialModalBottomSheet(
+                              context: context,
+                              builder: (context) => Scaffold(
+                                    appBar: AppBar(
+                                      systemOverlayStyle:
+                                          SystemUiOverlayStyle.dark,
+                                      foregroundColor: Colors.black,
+                                      title:
+                                          const Text('Vyberte čas rezervácie'),
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0,
+                                      leading: const Text(''),
+                                      actions: [
+                                        IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(
+                                                Icons.close_outlined))
+                                      ],
+                                    ),
+                                    body: ListView.separated(
+                                        itemCount: getTimes().length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(TimeOfDay.fromDateTime(
+                                                    DateTime.parse(
+                                                        getTimes()[index]))
+                                                .format(context)),
+                                            onTap: () {
+                                              setState(() {
+                                                _reservationTime =
+                                                    TimeOfDay.fromDateTime(
+                                                        DateTime.parse(
+                                                            getTimes()[index]));
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return const Divider();
+                                        }),
+                                  ));
+                        },
                       ),
-                      if (_selectedTable != null)
-                        OrderItem(
-                          label: _reservationTime?.format(context) ??
-                              'Vyberte čas rezervácie',
-                          icon: Icons.access_time_outlined,
-                          openTime: true,
-                          callback: () async {
-                            if (_selectedTable == null) return;
-                            showMaterialModalBottomSheet(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                      appBar: AppBar(
-                                        systemOverlayStyle:
-                                            SystemUiOverlayStyle.dark,
-                                        foregroundColor: Colors.black,
-                                        title: Text('Vyberte čas rezervácie'),
-                                        backgroundColor: Colors.transparent,
-                                        elevation: 0,
-                                        leading: Text(''),
-                                        actions: [
-                                          IconButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              icon: Icon(Icons.close_outlined))
-                                        ],
-                                      ),
-                                      body: ListView.separated(
-                                          itemCount: getTimes().length,
-                                          itemBuilder: (context, index) {
-                                            return ListTile(
-                                              title: Text(
-                                                  TimeOfDay.fromDateTime(
-                                                          DateTime.parse(
-                                                              getTimes()[
-                                                                  index]))
-                                                      .format(context)),
-                                              onTap: () {
-                                                setState(() {
-                                                  _reservationTime =
-                                                      TimeOfDay.fromDateTime(
-                                                          DateTime.parse(
-                                                              getTimes()[
-                                                                  index]));
-                                                });
-                                                Navigator.pop(context);
-                                              },
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) {
-                                            return Divider();
-                                          }),
-                                    ));
-                          },
-                        ),
-                      Container(
-                        margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Poznámka',
-                            ),
-                            TextField(
-                              minLines: 2,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              onChanged: (value) => note = value,
-                              style: const TextStyle(fontSize: 13),
-                              cursorColor: Theme.of(context).primaryColor,
-                              decoration: InputDecoration(
-                                  hintText: 'Nepovinné',
-                                  hintStyle: const TextStyle(fontSize: 13),
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 1.5))),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Poznámka',
+                          ),
+                          TextField(
+                            minLines: 2,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            onChanged: (value) => note = value,
+                            style: const TextStyle(fontSize: 13),
+                            cursorColor: Theme.of(context).primaryColor,
+                            decoration: InputDecoration(
+                                hintText: 'Nepovinné',
+                                hintStyle: const TextStyle(fontSize: 13),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Theme.of(context).primaryColor,
+                                        width: 1.5))),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
                 Container(
                   width: double.infinity,
                   height: 48,
-                  margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                  margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,
@@ -338,7 +339,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           _reservationTime == null || _selectedTable == null
                               ? null
                               : orderTable,
-                      child: Text('Záväzne objednať')),
+                      child: const Text('Záväzne objednať')),
                 ),
               ],
             ),
@@ -382,11 +383,12 @@ class OrderItem extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                        margin: EdgeInsets.only(right: 8), child: Icon(icon)),
+                        margin: const EdgeInsets.only(right: 8),
+                        child: Icon(icon)),
                     Text(label),
                   ],
                 ),
-                if (openTime) Icon(Icons.chevron_right_outlined)
+                if (openTime) const Icon(Icons.chevron_right_outlined)
               ],
             ),
           ),
@@ -400,17 +402,18 @@ enum TableState { available, reserved, selected }
 enum TableType { square, circle }
 
 class OrderTable extends StatelessWidget {
-  OrderTable({Key? key, required this.tableState, required this.tableType})
+  const OrderTable(
+      {Key? key, required this.tableState, required this.tableType})
       : super(key: key);
 
-  TableState tableState;
-  TableType tableType;
+  final TableState tableState;
+  final TableType tableType;
 
   @override
   Widget build(BuildContext context) {
     return Opacity(
       opacity: tableState == TableState.reserved ? 0.3 : 1,
-      child: Container(
+      child: SizedBox(
         width: 32,
         height: 32,
         child: Stack(
@@ -423,7 +426,7 @@ class OrderTable extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(1),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                       colors: [
                         Colors.white,
                         Colors.black,
@@ -443,7 +446,7 @@ class OrderTable extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(1),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                       colors: [
                         Colors.white,
                         Colors.black,
@@ -463,7 +466,7 @@ class OrderTable extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(1),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                       colors: [
                         Colors.white,
                         Colors.black,
@@ -483,7 +486,7 @@ class OrderTable extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(1),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                       colors: [
                         Colors.white,
                         Colors.black,

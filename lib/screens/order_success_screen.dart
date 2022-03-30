@@ -27,9 +27,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                         Icons.close_outlined,
                         color: Theme.of(context).primaryColor,
                       ))),
-              Spacer(),
+              const Spacer(),
               Container(
-                margin: EdgeInsets.only(bottom: 32),
+                margin: const EdgeInsets.only(bottom: 32),
                 child: SvgPicture.asset(
                   'assets/images/order-success.svg',
                   width: MediaQuery.of(context).size.width * 0.6,
@@ -40,11 +40,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.subtitle1,
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 width: double.infinity,
                 height: 48,
-                margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor,
@@ -56,7 +56,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                     //           context.vRouter.to(
                     //               '/tabs/restaurants/${_restaurant.id}/order/${_reservationDate!.toIso8601String()}')
                     //         },
-                    child: Text('Zavrieť')),
+                    child: const Text('Zavrieť')),
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -109,7 +110,9 @@ class _RouterState extends State<Router> {
         VNester(
           path: '/tabs',
           widgetBuilder: (child) {
-            print(child.toString());
+            if (kDebugMode) {
+              print(child.toString());
+            }
             return TabsScaffold(child: child);
           },
           stackedRoutes: [

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -19,7 +20,9 @@ class AuthCubit extends Cubit<Auth> {
     if (token == null || user == null) return;
     var newState = Auth(token: token, user: User.fromJson(jsonDecode(user)));
     emit(newState);
-    print(newState.token);
+    if (kDebugMode) {
+      print(newState.token);
+    }
   }
 
   Future<void> updateUser() async {
@@ -50,7 +53,9 @@ class AuthCubit extends Cubit<Auth> {
         context.vRouter.to('/intro/register/${phoneNumber.phoneNumber}');
       }
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
       if (err is DioError) {
         if (err.response?.data['error'] != null) {
           var snackBar = SnackBar(
@@ -81,7 +86,9 @@ class AuthCubit extends Cubit<Auth> {
             "name": name.trim(),
             "surname": surname.trim()
           });
-      print(data.data);
+      if (kDebugMode) {
+        print(data.data);
+      }
       Auth newState = Auth.fromJson(data.data);
       emit(newState);
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -89,7 +96,9 @@ class AuthCubit extends Cubit<Auth> {
       prefs.setString('user', jsonEncode(state.user?.toJson()));
       context.vRouter.to('/tabs');
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
       if (err is DioError) {
         if (err.response?.data['error'] != null) {
           var snackBar = SnackBar(
@@ -116,7 +125,9 @@ class AuthCubit extends Cubit<Auth> {
         "phone_number": phoneNumber.trim(),
         "auth_code": pin.trim(),
       });
-      print(data.data);
+      if (kDebugMode) {
+        print(data.data);
+      }
       Auth newState = Auth.fromJson(data.data);
       emit(newState);
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -124,7 +135,9 @@ class AuthCubit extends Cubit<Auth> {
       prefs.setString('user', jsonEncode(state.user?.toJson()));
       context.vRouter.to('/tabs');
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
       if (err is DioError) {
         if (err.response?.data['error'] != null) {
           var snackBar = SnackBar(
@@ -158,7 +171,9 @@ class AuthCubit extends Cubit<Auth> {
           options:
               Options(headers: {'Authorization': 'Bearer ${state.token}'}));
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
   }
 }

@@ -41,7 +41,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: Container(
-          margin: EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(64),
               color: Colors.white,
@@ -64,20 +64,20 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: Container(
+        child: SizedBox(
           height: double.infinity,
           child: Stack(
             children: [
               SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: 150),
+                padding: const EdgeInsets.only(bottom: 150),
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       height: 320,
                       child: Stack(
                         children: [
                           Stack(children: [
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               height: 256,
                               child: CachedNetworkImage(
@@ -97,7 +97,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                       Theme.of(context).scaffoldBackgroundColor,
                                       Colors.black.withOpacity(0),
                                     ],
-                                    stops: [0.0, 1.0],
+                                    stops: const [0.0, 1.0],
                                   )),
                             ),
                           ]),
@@ -106,8 +106,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                             child: Container(
                               height: 128,
                               width: MediaQuery.of(context).size.width - 64,
-                              margin: EdgeInsets.only(left: 32, right: 32),
-                              decoration: BoxDecoration(
+                              margin:
+                                  const EdgeInsets.only(left: 32, right: 32),
+                              decoration: const BoxDecoration(
                                   color: Colors.white,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8))),
@@ -117,7 +118,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                 children: [
                                   Text(
                                     _restaurant.name,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),
                                   ),
@@ -133,7 +134,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       child: Column(
                         children: [
                           Text(_restaurant.description),
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 12, bottom: 6),
                             child: Align(
                               child: Text(
@@ -147,7 +148,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                           Text(_restaurant.openingHours)
                         ],
                       ),
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                     )
                   ],
                 ),
@@ -164,7 +165,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                           color: Colors.black.withOpacity(0.2),
                           spreadRadius: 0,
                           blurRadius: 16,
-                          offset: Offset(0, -4), // changes position of shadow
+                          offset:
+                              const Offset(0, -4), // changes position of shadow
                         ),
                       ],
                     ),
@@ -177,9 +179,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                   context: context,
                                   initialDate: DateTime.now(),
                                   firstDate: DateTime.now(),
-                                  lastDate:
-                                      DateTime.now().add(Duration(days: 60)),
-                                  locale: Locale('sk'));
+                                  lastDate: DateTime.now()
+                                      .add(const Duration(days: 60)),
+                                  locale: const Locale('sk'));
                               setState(() {
                                 if (date != null) {
                                   _reservationDate = date;
@@ -189,21 +191,22 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                             child: Ink(
                               color: Colors.white,
                               child: Container(
-                                padding: EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(16),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(children: [
                                       Container(
-                                          margin: EdgeInsets.only(right: 8),
-                                          child: Icon(
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          child: const Icon(
                                               Icons.calendar_today_outlined)),
                                       Text(_reservationDate == null
                                           ? 'Vyberte deň rezervácie'
                                           : '${DateFormat.EEEE('sk').format(_reservationDate!).capitalize()}, ${DateFormat.Md('sk').format(_reservationDate!)}'),
                                     ]),
-                                    Icon(Icons.chevron_right_outlined),
+                                    const Icon(Icons.chevron_right_outlined),
                                   ],
                                 ),
                               ),
@@ -217,8 +220,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                           child: Container(
                             width: double.infinity,
                             height: 48,
-                            margin:
-                                EdgeInsets.only(left: 16, right: 16, top: 8),
+                            margin: const EdgeInsets.only(
+                                left: 16, right: 16, top: 8),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   primary: Theme.of(context).primaryColor,
@@ -227,7 +230,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                                     ? null
                                     : () => context.vRouter.to(
                                         '/tabs/restaurants/${_restaurant.id}/order/${_reservationDate!.toIso8601String()}'),
-                                child: Text('Vybrať stôl')),
+                                child: const Text('Vybrať stôl')),
                           ),
                         )
                       ],

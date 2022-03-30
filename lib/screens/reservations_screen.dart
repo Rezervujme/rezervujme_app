@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +43,9 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           return const Divider();
         },
         itemBuilder: (context, index) {
-          print(reservations);
+          if (kDebugMode) {
+            print(reservations);
+          }
           return ListTile(
             title: Text(reservations[index]['restaurant']['name']),
             subtitle: Row(

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,12 +40,12 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size(double.infinity, kToolbarHeight),
+          preferredSize: const Size(double.infinity, kToolbarHeight),
           child: AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.dark,
             child: SafeArea(
               child: Container(
-                padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -61,7 +62,9 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                                     .where((element) =>
                                         element.name.startsWith(val))
                                     .toList();
-                                print(searchedRestaurants);
+                                if (kDebugMode) {
+                                  print(searchedRestaurants);
+                                }
                               });
                             },
                             borderRadius: BorderRadius.circular(100)),
@@ -157,12 +160,12 @@ class RestaurantCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           onTap: () => context.vRouter.to('/tabs/restaurants/${restaurant.id}'),
           child: Container(
-            padding: EdgeInsets.all(4),
+            padding: const EdgeInsets.all(4),
             child: Ink(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 200,
                     width: double.infinity,
                     child: ClipRRect(

@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
+                          border: const UnderlineInputBorder(),
                           labelText: 'Meno',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -105,7 +105,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
+                          border: const UnderlineInputBorder(),
                           labelText: 'Priezvisko',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -131,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
+                          border: const UnderlineInputBorder(),
                           labelText: 'Email',
                           focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(

@@ -21,14 +21,14 @@ class IntroScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: 32, bottom: 32),
+                margin: const EdgeInsets.only(top: 32, bottom: 32),
                 child: SvgPicture.asset(
                   'assets/images/login.svg',
                   height: 150,
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 8),
+                margin: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   'Prihlásenie',
                   style: Theme.of(context).textTheme.headline4,
