@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +82,7 @@ class _OrderScreenState extends State<OrderScreen> {
       await Dio().post('${dotenv.get('APP_URL')}/api/v1/reservations',
           data: {
             'table_id': _selectedTable['uuid'],
+            'restaurant_id': _restaurant.id,
             'from': join(_reservationDate, _reservationTime!).toIso8601String(),
             'to': join(_reservationDate, _reservationTime!)
                 .add(const Duration(hours: 2))

@@ -145,7 +145,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                               alignment: Alignment.centerLeft,
                             ),
                           ),
-                          Text(_restaurant.openingHours)
+                          Align(child: Text(_restaurant.openingHours),alignment: Alignment.centerLeft,)
                         ],
                       ),
                       padding: const EdgeInsets.all(16),
